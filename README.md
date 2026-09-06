@@ -31,7 +31,7 @@ format:
 
 ```bash
 mkdir -p ~/.agents/skills
-git clone --depth 1 https://github.com/davidpreid/deliverd-skills /tmp/deliverd-skills
+git clone --depth 1 https://github.com/deliverd-dev/deliverd-skills /tmp/deliverd-skills
 cp -r /tmp/deliverd-skills/skills/artifact ~/.agents/skills/artifact
 ```
 
