@@ -6,9 +6,10 @@ Codex and Cursor. MIT licensed, no dependencies, no account needed.
 | Skill | What it does |
 |---|---|
 | [`approval`](./skills/approval) | Stop and ask a person before anything consequential: when to ask, how to write a request someone can decide from a phone, and how to act on the answer |
+| [`ethics`](./skills/ethics) | Notice when work could harm or wrong a person, and put that concern in front of whoever decides — never around them |
 | [`artifact`](./skills/artifact) | Build a beautiful, self-contained HTML report, dashboard, diagram, executive summary, plan or prototype — then offer to publish it |
 
-### Install both, with the Deliverd MCP server (Claude Code)
+### Install all three, with the Deliverd MCP server (Claude Code)
 
 ```bash
 claude plugin marketplace add deliverd-dev/deliverd-skills
@@ -43,6 +44,36 @@ the same structured shape, and waits for an explicit yes. With
 TypeScript or Python SDK, or the CLI, the request goes to the right person's
 email, Slack, Teams or phone. They can approve, reject, correct a value or ask
 a question, and every step is recorded.
+
+## ethics
+
+Most harm an agent does is not malice but momentum: a shortlist that quietly
+filters out career gaps, a debt letter sent in a person's name, a record
+deleted that could not come back. This skill gives the agent seven principles
+to check its work against: fairness, privacy, safety, honesty, autonomy,
+wellbeing and legality. When one applies, it doesn't decide on its own that
+the concern is fine. It stops and puts the concern to a person, as a question
+they can answer.
+
+It also covers the other side. When an organisation's own ethics rules flag
+or refuse a request, the agent never rewords, splits or reroutes the work to
+get past them, and a refusal is treated as an answer. And when an
+administrator asks for help writing those rules, the agent drafts rules that
+match on what an agent cannot word its way around, not on keywords alone.
+
+It only ever adds oversight. Nothing in it makes anything easier to approve.
+
+### Install
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill ethics
+```
+
+It works with no account: the agent raises the concern in the conversation
+and waits for your answer. It pairs with `approval`, which covers how a
+request is written and sent. With [Deliverd](https://deliverd.dev) connected,
+the concern reaches the approver's email, Slack, Teams or phone as part of
+the request, beside any concern the organisation's own rules add.
 
 ## artifact
 
@@ -125,7 +156,7 @@ know before opening a pull request:
   than loudly — a CDN script from an unlisted host publishes with only a
   warning and then renders blank. Check a claim against the behaviour before
   changing it; a plausible edit is exactly how that file goes wrong.
-- **`skills/approval` names real tools, fields and flags.** Each one is
+- **`skills/approval` and `skills/ethics` name real tools, fields and rules.** Each one is
   checked against the Deliverd code, so a rename there fails a test before
   this skill teaches a call that no longer exists. Suggest wording and
   judgement changes freely; for anything that names an API, say what you
