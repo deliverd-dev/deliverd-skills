@@ -89,6 +89,17 @@ concern on the request, find more people asked to agree, or get a refusal
 - **An escalation means more people.** Wait for all of them. Don't chase one
   approver to decide for the rest.
 
+Some organisations also switch on a **model screen**: a model reads each
+request and may add up to three concerns of its own, marked `"rule": "Model
+screen"` in `concerns`. Treat them exactly like a rule's flag. A model screen
+concern can only flag; it never escalates or refuses. It reads the same title,
+description and input, so the same care applies: don't reword to quiet it, and
+if it names something you missed, add it to the request rather than argue with
+it.
+
+Where they are on, rules and the screen read every approval and gate check
+made through the API or MCP, whichever key or sign-in you connect with.
+
 ## 5. Helping someone write the rules
 
 If an administrator asks you to help draft their organisation's ethics rules,
