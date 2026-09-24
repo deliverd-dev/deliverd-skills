@@ -67,9 +67,12 @@ failure mode.**
 A single HTML document is the simple case. For a bundle:
 
 - Entry point is `index.html` at the root.
-- **Relative paths only** — `assets/logo.svg`, never `/assets/logo.svg`. The
-  gateway injects a `<base>` so relative paths resolve; a root-relative path
-  escapes the report entirely.
+- **Relative paths** — `assets/logo.svg` rather than `/assets/logo.svg`. The
+  gateway injects a `<base>` so relative paths resolve. A root-absolute path
+  that points at a file in the bundle (what `vite build` emits) is rewritten
+  to relative at publish; one that points at nothing is left alone and
+  reported as a warning, because under the report's address it will not
+  load.
 - **Never write your own `<base>` tag.** The injection is skipped if the
   document already has one, and then every relative path breaks.
 - No `..`, no absolute paths, no drive letters. Maximum depth 10.
@@ -85,11 +88,12 @@ A single HTML document is the simple case. For a bundle:
 | Path | Limit |
 |---|---|
 | Inline `content` (MCP or REST) | 2 MB |
-| Inline `files` array | 50 entries, 2 MB each, **text only** |
+| Inline `files` array | 50 entries, 2 MB each; binary as base64 with `encoding: "base64"` |
 | Zip or folder upload | 500 files, 50 MB zipped, 150 MB unpacked, 30 MB per file |
 
-Binary assets cannot go through the inline `files` array — it is UTF-8 text.
-Embed them as data URIs, or publish a zip.
+A binary asset goes through the inline `files` array as base64: set
+`encoding: "base64"` on that entry and it is decoded into the bundle. Data
+URIs and a zip upload both still work.
 
 ## Secrets: blockers, not warnings
 

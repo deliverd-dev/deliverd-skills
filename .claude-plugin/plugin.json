@@ -1,0 +1,18 @@
+{
+  "name": "deliverd",
+  "version": "1.0.0",
+  "description": "Give any AI agent a way to ask a person — for approval, a decision, an answer or a review.",
+  "author": {
+    "name": "Deliverd",
+    "url": "https://deliverd.dev"
+  },
+  "homepage": "https://deliverd.dev/developers",
+  "license": "MIT",
+  "keywords": ["human-in-the-loop", "approval", "review", "agents", "mcp", "publish", "reports"],
+  "mcpServers": {
+    "deliverd": {
+      "type": "http",
+      "url": "https://deliverd.dev/api/mcp"
+    }
+  }
+}

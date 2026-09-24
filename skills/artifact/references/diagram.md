@@ -46,6 +46,39 @@ stays editable. A published HTML artifact does **not** render it — that needs
 a library, and an external library is exactly what a published report cannot
 load. In HTML, write the SVG.
 
+## When the diagram is too big to read at once
+
+Past roughly a dozen nodes a static picture stops working: either the labels
+shrink below reading size or the page scrolls sideways and nobody sees the
+whole shape. That is the point at which interaction earns its cost — pan and
+zoom, click a node to read about it, trace one path through the rest.
+
+`examples/reference-architecture.html` is the worked version: 17 nodes, 25
+labelled edges, an inspector panel and two traced flows, in one file with no
+external request. Copy its structure rather than reinventing it. Three things
+in it are not obvious and are what make it legible:
+
+- **Put the prose in a side panel, not on the canvas.** Responsibilities and
+  connection lists belong beside the diagram. Cramming them into boxes is what
+  forces the text below reading size in the first place.
+- **Place edge labels on the real curve.** The midpoint of the straight line
+  between two endpoints is not on the bezier drawn between them, so the naive
+  version leaves labels floating beside the line they name. Walk the path with
+  `getPointAtLength`, and measure the text after inserting it — a guessed
+  width clips on a machine that resolved a different font.
+- **Hide a label rather than stack it.** When a label cannot find clear space,
+  leave it out and show it when its edge is selected or traced. A diagram that
+  is honest at rest and complete on demand beats one that is illegible in both
+  states.
+
+Draw edges beneath nodes, so a line passing behind a box reads as depth rather
+than as a collision. And keep every node reachable by keyboard with an
+`aria-label` that carries what the inspector would say — a pan-and-zoom canvas
+is otherwise unusable without a mouse.
+
+Do not reach for this below about a dozen nodes. A static SVG that fits on the
+screen is better than an interactive one that has to be explored.
+
 ## Common failure
 
 A diagram that shows the boxes but not the arrows — an architecture picture

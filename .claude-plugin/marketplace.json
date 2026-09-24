@@ -1,0 +1,14 @@
+{
+  "name": "deliverd",
+  "owner": {
+    "name": "Deliverd",
+    "url": "https://deliverd.dev"
+  },
+  "plugins": [
+    {
+      "name": "deliverd",
+      "source": "./",
+      "description": "The Deliverd MCP server with two skills: approval (ask a person before a consequential action) and artifact (build and publish an HTML page), in one install."
+    }
+  ]
+}

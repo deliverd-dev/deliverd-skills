@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent-native app — reference architecture</title>
+<style>
+/* ── Theme ────────────────────────────────────────────────────────────────
+   Every colour is a token defined on bare :root, so the dark blocks below
+   only ever redefine — never introduce — a value. A colour whose sole
+   definition lives inside a media query disappears in the other theme. */
+:root{
+  --bg:#fcfcfa; --panel:#ffffff; --sunken:#f6f6f3;
+  --ink:#1b1b19; --muted:#6d6d66; --faint:#93938c;
+  --line:#e4e4dd; --line-strong:#d2d2c9;
+  --node:#ffffff; --node-line:#dedad2; --node-shadow:0 1px 2px rgba(30,28,20,.06);
+  --edge:#c3c3ba; --edge-hot:#1b1b19; --label-bg:#fcfcfa;
+  --focus:#3b6fd4;
+  --c-clients:#3d8f63; --c-edge:#b5822f; --c-api:#5457c9;
+  --c-async:#a3548a; --c-data:#2b8383;
+  --dot:#e8e8e0;
+}
+:root[data-theme="dark"]{
+  --bg:#121211; --panel:#1a1a19; --sunken:#232321;
+  --ink:#eceae5; --muted:#9b9a92; --faint:#75746c;
+  --line:#2c2c29; --line-strong:#3a3a35;
+  --node:#1e1e1c; --node-line:#37372f; --node-shadow:none;
+  --edge:#4a4a44; --edge-hot:#eceae5; --label-bg:#121211;
+  --focus:#7aa3f0;
+  --c-clients:#63c191; --c-edge:#dbab5c; --c-api:#8b8dee;
+  --c-async:#d183b8; --c-data:#5cb5b5;
+  --dot:#26261f;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121211; --panel:#1a1a19; --sunken:#232321;
+    --ink:#eceae5; --muted:#9b9a92; --faint:#75746c;
+    --line:#2c2c29; --line-strong:#3a3a35;
+    --node:#1e1e1c; --node-line:#37372f; --node-shadow:none;
+    --edge:#4a4a44; --edge-hot:#eceae5; --label-bg:#121211;
+    --focus:#7aa3f0;
+    --c-clients:#63c191; --c-edge:#dbab5c; --c-api:#8b8dee;
+    --c-async:#d183b8; --c-data:#5cb5b5;
+    --dot:#26261f;
+  }
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.mono{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}
+
+/* ── Chrome ─────────────────────────────────────────────────────────────── */
+header{padding:22px 26px 16px; border-bottom:1px solid var(--line); flex:0 0 auto}
+h1{margin:0 0 6px; font-size:19px; font-weight:640; letter-spacing:-.02em}
+.sub{margin:0; color:var(--muted); font-size:13px; max-width:64ch}
+
+.bar{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:10px 26px; border-bottom:1px solid var(--line);
+  background:var(--sunken); flex:0 0 auto;
+}
+.bar .grp{display:flex; align-items:center; gap:6px}
+.bar .cap{font-size:10.5px; letter-spacing:.1em; color:var(--faint); text-transform:uppercase}
+.sep{width:1px; height:20px; background:var(--line-strong); margin:0 4px}
+.spacer{flex:1}
+
+button{
+  font:inherit; font-size:13px; color:var(--ink); background:var(--panel);
+  border:1px solid var(--line-strong); border-radius:7px; padding:5px 11px;
+  cursor:pointer; display:inline-flex; align-items:center; gap:7px;
+}
+button:hover{background:var(--sunken)}
+button:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+button[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+button.icon{padding:5px 10px; min-width:32px; justify-content:center}
+.swatch{width:9px; height:9px; border-radius:2px; background:currentColor; flex:0 0 auto}
+#zoomLevel{font-size:12px; color:var(--muted); min-width:44px; text-align:center}
+
+/* ── Stage ──────────────────────────────────────────────────────────────── */
+main{flex:1 1 auto; display:flex; min-height:0}
+.canvas{position:relative; flex:1 1 auto; min-width:0; overflow:hidden}
+svg#stage{display:block; width:100%; height:100%; touch-action:none; cursor:grab}
+svg#stage.dragging{cursor:grabbing}
+
+.legend{
+  position:absolute; left:16px; bottom:16px; z-index:2;
+  background:var(--panel); border:1px solid var(--line); border-radius:9px;
+  padding:10px 12px; box-shadow:var(--node-shadow);
+}
+.legend .cap{font-size:10.5px; letter-spacing:.1em; color:var(--faint);
+  text-transform:uppercase; display:block; margin-bottom:7px}
+.legend button{
+  display:flex; width:100%; gap:8px; border:0; background:none; padding:3px 4px;
+  border-radius:5px; font-size:12.5px; color:var(--muted); text-align:left;
+}
+.legend button:hover{background:var(--sunken)}
+.legend button[aria-pressed="true"]{background:var(--sunken); color:var(--ink); font-weight:560}
+
+.hint{
+  position:absolute; right:16px; bottom:16px; z-index:2;
+  display:flex; gap:14px; align-items:center;
+  background:var(--panel); border:1px solid var(--line); border-radius:9px;
+  padding:7px 11px; font-size:12px; color:var(--muted);
+}
+.hint kbd{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px;
+  background:var(--sunken); border:1px solid var(--line-strong); border-bottom-width:2px;
+  border-radius:4px; padding:1px 5px; color:var(--ink);
+}
+
+/* ── Inspector ──────────────────────────────────────────────────────────── */
+aside{
+  flex:0 0 340px; border-left:1px solid var(--line); background:var(--panel);
+  padding:22px 22px 32px; overflow-y:auto;
+}
+aside h2{margin:0 0 10px; font-size:15px; font-weight:620; letter-spacing:-.01em}
+aside .empty{color:var(--muted); font-size:13px; margin:0}
+.kind{
+  display:inline-flex; align-items:center; gap:6px; font-size:11px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:12px;
+}
+/* A path is not a heading. The uppercasing belongs to the category beside it. */
+.kind .mono{text-transform:none; letter-spacing:0; font-size:11.5px}
+.desc{margin:0 0 18px; font-size:13.5px; color:var(--muted)}
+.sect{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--faint); margin:0 0 8px}
+aside ul{margin:0 0 18px; padding-left:16px}
+aside li{font-size:13px; margin-bottom:5px; color:var(--ink)}
+.conn{
+  display:flex; gap:8px; align-items:baseline; padding:5px 0;
+  border-top:1px solid var(--line); font-size:13px;
+}
+.conn:first-of-type{border-top:0}
+.conn .dir{color:var(--faint); font-size:11px; flex:0 0 auto; width:16px}
+.conn .peer{font-weight:560}
+.conn .via{color:var(--muted); font-size:12px}
+.steps{counter-reset:s; margin:0; padding:0; list-style:none}
+.steps li{
+  counter-increment:s; position:relative; padding-left:26px; margin-bottom:9px;
+  font-size:13px;
+}
+.steps li::before{
+  content:counter(s); position:absolute; left:0; top:0;
+  width:18px; height:18px; border-radius:50%; background:var(--sunken);
+  border:1px solid var(--line-strong); font-size:10.5px; color:var(--muted);
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* ── SVG states ─────────────────────────────────────────────────────────── */
+.node{cursor:pointer}
+.node:focus{outline:none}
+.node:focus-visible .box{stroke:var(--focus); stroke-width:2}
+.node .box{fill:var(--node); stroke:var(--node-line); stroke-width:1; rx:9}
+.node:hover .box{stroke:var(--line-strong)}
+.node .title{fill:var(--ink); font-size:13.5px; font-weight:600; letter-spacing:-.01em}
+.node .meta{fill:var(--muted); font-size:11px}
+.node.sel .box{stroke:var(--ink); stroke-width:1.8}
+.dim{opacity:.22}
+.node,.edge,.elabel,.ebg{transition:opacity .18s ease, stroke .18s ease, fill .18s ease}
+.edge{fill:none; stroke:var(--edge); stroke-width:1.4}
+.edge.hot{stroke:var(--edge-hot); stroke-width:2}
+.elabel{fill:var(--muted); font-size:10.5px}
+.elabel.hot{fill:var(--ink)}
+.ebg{fill:var(--label-bg)}
+.gbox{fill:none; stroke:var(--line-strong); stroke-width:1; stroke-dasharray:3 4; rx:12}
+.glabel{fill:var(--faint); font-size:10.5px; letter-spacing:.1em}
+
+/* Nothing here animates to convey meaning — the fades are polish only, so
+   removing them costs the reader nothing. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:.001ms!important; animation-duration:.001ms!important}
+}
+
+/* On paper there is no panning, so the toolbar and the pointer hints are
+   noise. The inspector keeps whatever the reader had selected, which is
+   usually why they reached for print in the first place. */
+@media print{
+  html,body{height:auto; overflow:visible; background:#fff}
+  .bar,.hint,.legend{display:none!important}
+  main{display:block}
+  .canvas{height:620px; page-break-inside:avoid}
+  svg#stage{height:620px}
+  aside{border-left:0; border-top:1px solid var(--line); padding:18px 0 0}
+  header{padding-left:0; padding-right:0}
+}
+
+@media (max-width:900px){
+  aside{position:absolute; right:0; top:0; bottom:0; z-index:3; flex-basis:300px;
+    box-shadow:-8px 0 24px rgba(0,0,0,.10)}
+  main{position:relative}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Agent-native app — reference architecture</h1>
+  <p class="sub">Clients at the top, data at the bottom. Click any node to inspect it; drag to pan, ctrl/⌘ + scroll to zoom. Trace the publish and view paths with the flow buttons.</p>
+</header>
+
+<div class="bar">
+  <span class="cap">Flows</span>
+  <div class="grp">
+    <button id="flowPublish" aria-pressed="false"><span class="swatch" style="color:var(--c-api)"></span>Publish flow</button>
+    <button id="flowView" aria-pressed="false"><span class="swatch" style="color:var(--c-edge)"></span>View flow</button>
+  </div>
+  <span class="sep"></span>
+  <span class="cap">View</span>
+  <div class="grp">
+    <button class="icon" id="zoomOut" aria-label="Zoom out">−</button>
+    <span id="zoomLevel" class="mono">100%</span>
+    <button class="icon" id="zoomIn" aria-label="Zoom in">+</button>
+    <button id="fit">Fit</button>
+    <button id="reset">Reset</button>
+  </div>
+  <span class="sep"></span>
+  <button id="clear">Clear selection</button>
+  <span class="spacer"></span>
+  <button id="theme">Theme</button>
+</div>
+
+<main>
+  <div class="canvas">
+    <svg id="stage" role="img" aria-label="Architecture diagram. Use the inspector panel for a text description of each component."></svg>
+
+    <div class="legend">
+      <span class="cap">Categories</span>
+      <div id="legendItems"></div>
+    </div>
+
+    <div class="hint">
+      <span><kbd>drag</kbd> pan</span>
+      <span><kbd>⌘</kbd><kbd>scroll</kbd> zoom</span>
+      <span><kbd>esc</kbd> clear</span>
+    </div>
+  </div>
+
+  <aside id="inspector" aria-live="polite">
+    <h2>Inspector</h2>
+    <p class="empty">Select a node to see what it is responsible for and what it talks to. Use the flow buttons to trace the publish and view paths end to end.</p>
+  </aside>
+</main>
+
+<script>
+"use strict";
+
+/* ── The model ────────────────────────────────────────────────────────────
+   Coordinates are hand-placed rather than laid out by an algorithm: a
+   reference diagram is read far more often than it is edited, and a stable
+   arrangement people can build a memory of beats one that reshuffles every
+   time a node is added. */
+
+const CATS = {
+  clients:{label:"Clients", v:"--c-clients"},
+  edge:   {label:"Edge",    v:"--c-edge"},
+  api:    {label:"Application", v:"--c-api"},
+  async:  {label:"Async",   v:"--c-async"},
+  data:   {label:"Data",    v:"--c-data"},
+};
+
+const NW = 200, NH = 62;
+
+const GROUPS = [
+  {label:"CLIENTS",     cat:"clients", x:56,   y:36,  w:1010, h:150},
+  {label:"EDGE",        cat:"edge",    x:56,   y:236, w:1010, h:150},
+  {label:"APPLICATION", cat:"api",     x:56,   y:436, w:1010, h:270},
+  {label:"DATA",        cat:"data",    x:56,   y:766, w:1010, h:150},
+  {label:"ASYNC",       cat:"async",   x:1116, y:436, w:340,  h:340},
+];
+
+const NODES = [
+  {id:"browser", cat:"clients", x:158, y:80, name:"Browser", meta:"web client",
+   desc:"People using the product: the application they work in, and the pages somebody sent them a link to.",
+   does:["Authenticates against the application origin","Reads published pages from a separate origin","Holds a short-lived, partitioned session cookie"]},
+  {id:"cli", cat:"clients", x:460, y:80, name:"CLI", meta:"dev tool",
+   desc:"The scriptable path, for a developer machine or a CI job holding an API key.",
+   does:["Submits content from a file or a directory","Configures local agents in one command","Reads its credentials from the environment"]},
+  {id:"agent", cat:"clients", x:762, y:80, name:"AI agent", meta:"MCP client",
+   desc:"A coding assistant connected over Streamable HTTP, authorised by OAuth rather than a shared key.",
+   does:["Calls the server's tools over MCP","Authorises per person, not per key","Creates and revises without leaving the editor"]},
+
+  {id:"proxy", cat:"edge", x:216, y:280, name:"Edge router", meta:"request routing",
+   desc:"Runs before every request. Decides which host it arrived on and whether the path is reachable without a session.",
+   does:["Routes application, content and customer hosts","Holds the public-path allowlist","Redirects anonymous requests to sign-in","Serves a robots policy per origin"]},
+  {id:"gateway", cat:"edge", x:616, y:280, name:"Asset gateway", meta:"published bytes",
+   desc:"Serves the stored bytes of a published page, and is the only thing that does.",
+   does:["Evaluates the access decision per request","Sets the content security policy","Resolves relative asset paths","Answers data reads for live pages"]},
+
+  {id:"app", cat:"api", x:158, y:480, name:"Web app", meta:"server-rendered UI",
+   desc:"The console people work in: content, collaboration, administration and billing.",
+   does:["Server components and server actions","Enforces plan limits","Renders the administrative surfaces"]},
+  {id:"rest", cat:"api", x:460, y:480, name:"REST API", meta:"public interface",
+   desc:"The programmable surface the CLI and CI use, authenticated by API key.",
+   does:["Create, list, update, share","Scope-checked per key","Generated from one schema registry"]},
+  {id:"mcp", cat:"api", x:762, y:480, name:"MCP server", meta:"agent interface",
+   desc:"A remote Streamable HTTP MCP server implementing the full authorization spec.",
+   does:["Protected-resource and server metadata discovery","Dynamic client registration","PKCE, S256 only","Every tool gated by scope"]},
+  {id:"policy", cat:"api", x:158, y:600, name:"Rules engine", meta:"policy evaluation",
+   desc:"A pure evaluator deciding whether an action is permitted, called from a fixed set of chokepoints.",
+   does:["Evaluates the customer's own rules","Fails closed when unavailable","Its call sites pinned by a test"]},
+  {id:"pipeline", cat:"api", x:460, y:600, name:"Ingest pipeline", meta:"validate → scan → store",
+   desc:"Turns submitted content into a version that can be served safely.",
+   does:["Validates structure and paths","Blocks on leaked credentials","Inlines third-party assets","Writes an immutable version"]},
+  {id:"auth", cat:"api", x:762, y:600, name:"Access control", meta:"identity and scopes",
+   desc:"Every way somebody proves who they are, and the one place that decides what a request may reach.",
+   does:["Passwords, email links and one-time codes","SAML and OpenID Connect per customer","API keys and machine identities"]},
+
+  {id:"postgres", cat:"data", x:158, y:810, name:"Relational store", meta:"row-level security",
+   desc:"Every row a tenant owns, isolated in the database rather than by application code.",
+   does:["Records, versions, comments, membership","Access rules applied as database policy","Search runs through the same predicate"]},
+  {id:"storage", cat:"data", x:460, y:810, name:"Object store", meta:"content bundles",
+   desc:"The bytes of every published version, addressed by version rather than overwritten.",
+   does:["One immutable object per version","Reachable only through the gateway","Pruned on the retention schedule"]},
+  {id:"audit", cat:"data", x:762, y:810, name:"Event log", meta:"append only",
+   desc:"What happened, written where it cannot later be edited.",
+   does:["Immutable by database trigger","A closed set of declared event types","Exportable for review"]},
+
+  {id:"billing", cat:"async", x:1156, y:480, name:"Billing", meta:"plans and limits",
+   desc:"Plans and the limits they carry, reconciled from webhooks rather than from the checkout redirect.",
+   does:["Idempotent webhook handling","Resolves legacy prices","Drives every plan gate"]},
+  {id:"email", cat:"async", x:1156, y:580, name:"Notifications", meta:"outbound mail",
+   desc:"Invitations, alerts and one-time codes, sent from the customer's own domain once it is verified.",
+   does:["Sends from a verified domain","Carries the customer's branding","Falls back to the platform sender"]},
+  {id:"cron", cat:"async", x:1156, y:680, name:"Scheduled jobs", meta:"background work",
+   desc:"Time-based work: retention, recurring tasks and domain checks.",
+   does:["Prunes past the retention window","Marks due recurrences","Re-checks pending DNS records"]},
+];
+
+const EDGES = [
+  ["browser","proxy","app UI"],
+  ["cli","proxy","REST"],
+  ["agent","proxy","MCP"],
+  ["proxy","gateway","asset host"],
+  ["proxy","app","pages"],
+  ["proxy","rest","/api/v1"],
+  ["proxy","mcp","/api/mcp"],
+  ["gateway","auth","access check"],
+  ["gateway","storage","bundle"],
+  ["gateway","postgres","metadata"],
+  ["app","auth","session"],
+  ["rest","auth","API key"],
+  ["mcp","auth","OAuth"],
+  ["app","pipeline","upload"],
+  ["rest","pipeline","submit"],
+  ["mcp","pipeline","submit"],
+  ["pipeline","policy","evaluate"],
+  ["pipeline","storage","bundle"],
+  ["pipeline","postgres","version"],
+  ["pipeline","audit","write event"],
+  ["auth","audit","sign-ins, refusals"],
+  ["cron","postgres","schedules, retention"],
+  ["cron","email","notifications"],
+  ["rest","billing","webhooks"],
+  ["billing","policy","plan limits"],
+];
+
+const FLOWS = {
+  publish:{
+    title:"Publish flow",
+    blurb:"An agent turns a document into a version somebody can be sent.",
+    edges:["agent-proxy","proxy-mcp","mcp-auth","mcp-pipeline","pipeline-policy","pipeline-storage","pipeline-postgres","pipeline-audit"],
+    steps:[
+      "The agent calls the create tool over MCP with a bearer token it obtained by OAuth.",
+      "The edge router recognises the application host and lets the MCP path through unauthenticated, so the server itself can answer the challenge.",
+      "Access control resolves the token to a principal and checks it holds the write scope.",
+      "The pipeline validates the files, refuses on a leaked credential, and inlines any third-party assets.",
+      "The rules engine decides whether this customer permits the action.",
+      "The bundle is written to the object store as a new immutable object.",
+      "A version row is inserted and made current in the same transaction.",
+      "An event records who published what, and when.",
+    ],
+  },
+  view:{
+    title:"View flow",
+    blurb:"Somebody opens the link, and the bytes are served only if they may see them.",
+    edges:["browser-proxy","proxy-gateway","gateway-auth","gateway-postgres","gateway-storage"],
+    steps:[
+      "The browser requests the page on the content origin.",
+      "The edge router matches the host and routes to the asset gateway.",
+      "The gateway loads the metadata row and the customer's security settings.",
+      "The access decision runs: owner, member, named audience, verified guest, or public.",
+      "On a pass, the stored bundle is streamed back with the content security policy and resolved asset paths.",
+    ],
+  }
+};
+
+/* ── Derived indexes ──────────────────────────────────────────────────── */
+const byId = new Map(NODES.map(n => [n.id, n]));
+const edgeId = (a,b) => a + "-" + b;
+const EDGE_LIST = EDGES.map(([from,to,label]) => ({id:edgeId(from,to), from, to, label}));
+
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}) => {
+  const node = document.createElementNS(NS, tag);
+  for (const [k,v] of Object.entries(attrs)) node.setAttribute(k, v);
+  return node;
+};
+
+const stage = document.getElementById("stage");
+const inspector = document.getElementById("inspector");
+
+/* ── Geometry ─────────────────────────────────────────────────────────── */
+const centre = n => ({x:n.x + NW/2, y:n.y + NH/2});
+
+/* Anchors on the facing edges, so a line never crosses the box it leaves. */
+function anchors(a, b){
+  const ca = centre(a), cb = centre(b);
+  if (Math.abs(cb.y - ca.y) >= Math.abs(cb.x - ca.x)){
+    const down = cb.y > ca.y;
+    return {
+      x1:ca.x, y1:down ? a.y + NH : a.y,
+      x2:cb.x, y2:down ? b.y : b.y + NH,
+      vertical:true,
+    };
+  }
+  const right = cb.x > ca.x;
+  return {
+    x1:right ? a.x + NW : a.x, y1:ca.y,
+    x2:right ? b.x : b.x + NW, y2:cb.y,
+    vertical:false,
+  };
+}
+
+function path(p){
+  if (p.vertical){
+    const d = Math.max(28, Math.abs(p.y2 - p.y1) * 0.45);
+    const s = p.y2 > p.y1 ? 1 : -1;
+    return `M${p.x1},${p.y1} C${p.x1},${p.y1 + d*s} ${p.x2},${p.y2 - d*s} ${p.x2},${p.y2}`;
+  }
+  const d = Math.max(28, Math.abs(p.x2 - p.x1) * 0.45);
+  const s = p.x2 > p.x1 ? 1 : -1;
+  return `M${p.x1},${p.y1} C${p.x1 + d*s},${p.y1} ${p.x2 - d*s},${p.y2} ${p.x2},${p.y2}`;
+}
+
+/* ── Render ───────────────────────────────────────────────────────────── */
+const defs = el("defs");
+for (const [name, colour] of [["a-nrm","var(--edge)"],["a-hot","var(--edge-hot)"]]){
+  const m = el("marker", {id:name, viewBox:"0 0 8 8", refX:"7", refY:"4",
+    markerWidth:"7", markerHeight:"7", orient:"auto-start-reverse"});
+  m.appendChild(el("path", {d:"M0,1 L7,4 L0,7 z", fill:colour}));
+  defs.appendChild(m);
+}
+const pattern = el("pattern", {id:"dots", width:"22", height:"22", patternUnits:"userSpaceOnUse"});
+pattern.appendChild(el("circle", {cx:"1.2", cy:"1.2", r:"1.2", fill:"var(--dot)"}));
+defs.appendChild(pattern);
+stage.appendChild(defs);
+
+const grid = el("rect", {x:"-4000", y:"-4000", width:"12000", height:"12000", fill:"url(#dots)"});
+const scene = el("g");
+scene.appendChild(grid);
+stage.appendChild(scene);
+
+const layerGroups = el("g"); scene.appendChild(layerGroups);
+const layerEdges  = el("g"); scene.appendChild(layerEdges);
+const layerLabels = el("g"); scene.appendChild(layerLabels);
+const layerNodes  = el("g"); scene.appendChild(layerNodes);
+
+for (const g of GROUPS){
+  layerGroups.appendChild(el("rect", {class:"gbox", x:g.x, y:g.y, width:g.w, height:g.h}));
+  const t = el("text", {class:"glabel", x:g.x + 14, y:g.y + 20});
+  t.textContent = g.label;
+  layerGroups.appendChild(t);
+}
+
+const edgeEls = new Map();
+for (const e of EDGE_LIST){
+  const a = byId.get(e.from), b = byId.get(e.to);
+  const geom = anchors(a, b);
+  const line = el("path", {class:"edge", d:path(geom), "marker-end":"url(#a-nrm)"});
+  layerEdges.appendChild(line);
+
+  edgeEls.set(e.id, {line, data:e});
+}
+
+/* ── Edge labels ──────────────────────────────────────────────────────────
+   Two things this does that the obvious version does not.
+
+   It measures the text after inserting it, because the width depends on the
+   font the reader's machine actually resolved — a guessed width clips on
+   somebody else's system. And it walks the *real* path with
+   getPointAtLength rather than taking the midpoint of the straight line
+   between the endpoints: those are different points on every curve here, so
+   the naive version leaves labels floating beside the line they name.
+
+   Then it keeps them apart. A label that cannot find a clear spot on its own
+   path is hidden rather than stacked on top of a neighbour — the connection
+   is still named in the inspector, and it reappears the moment its edge is
+   part of a traced flow or a selection. A diagram that is honest at rest and
+   complete on demand beats one that is illegible in both states. */
+
+const taken = NODES.map(n => ({x:n.x - 6, y:n.y - 6, w:NW + 12, h:NH + 12}));
+const hits = (a, b) =>
+  !(a.x + a.w < b.x || b.x + b.w < a.x || a.y + a.h < b.y || b.y + b.h < a.y);
+
+for (const e of EDGE_LIST){
+  const rec = edgeEls.get(e.id);
+  const text = el("text", {class:"elabel", "text-anchor":"middle",
+    "dominant-baseline":"middle"});
+  text.textContent = e.label;
+  layerLabels.appendChild(text);
+  const m = text.getBBox();
+  const plate = el("rect", {class:"ebg", rx:3});
+  layerLabels.insertBefore(plate, text);
+
+  const len = rec.line.getTotalLength();
+  let placed = null;
+  for (const t of [0.5, 0.36, 0.64, 0.26, 0.74]){
+    const pt = rec.line.getPointAtLength(len * t);
+    const box = {x:pt.x - m.width/2 - 5, y:pt.y - m.height/2 - 2,
+                 w:m.width + 10, h:m.height + 4};
+    if (!taken.some(q => hits(box, q))){ placed = {pt, box}; break; }
+  }
+  const crowded = placed === null;
+  if (crowded) placed = {pt:rec.line.getPointAtLength(len * 0.5), box:null};
+  else taken.push(placed.box);
+
+  text.setAttribute("x", placed.pt.x);
+  text.setAttribute("y", placed.pt.y);
+  plate.setAttribute("x", placed.pt.x - m.width/2 - 4);
+  plate.setAttribute("y", placed.pt.y - m.height/2 - 1.5);
+  plate.setAttribute("width", m.width + 8);
+  plate.setAttribute("height", m.height + 3);
+
+  Object.assign(rec, {text, plate, crowded});
+}
+
+const nodeEls = new Map();
+for (const n of NODES){
+  const g = el("g", {class:"node", tabindex:"0", role:"button",
+    "aria-label":`${n.name}. ${n.desc}`});
+  g.appendChild(el("rect", {class:"box", x:n.x, y:n.y, width:NW, height:NH}));
+  g.appendChild(el("rect", {x:n.x + 11, y:n.y + 17, width:3, height:NH - 34, rx:1.5,
+    fill:`var(${CATS[n.cat].v})`}));
+  const title = el("text", {class:"title", x:n.x + 24, y:n.y + 27});
+  title.textContent = n.name;
+  const meta = el("text", {class:"meta mono", x:n.x + 24, y:n.y + 45});
+  meta.textContent = n.meta;
+  g.appendChild(title); g.appendChild(meta);
+  layerNodes.appendChild(g);
+  nodeEls.set(n.id, g);
+
+  g.addEventListener("click", ev => { ev.stopPropagation(); selectNode(n.id); });
+  g.addEventListener("keydown", ev => {
+    if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); selectNode(n.id); }
+  });
+}
+
+/* ── Pan and zoom ─────────────────────────────────────────────────────── */
+const WORLD = {x:36, y:16, w:1440, h:920};
+let tx = 0, ty = 0, k = 1;
+
+function apply(){
+  scene.setAttribute("transform", `translate(${tx.toFixed(2)},${ty.toFixed(2)}) scale(${k.toFixed(4)})`);
+  document.getElementById("zoomLevel").textContent = Math.round(k * 100) + "%";
+}
+const clampK = v => Math.min(2.4, Math.max(0.25, v));
+
+function fit(){
+  const r = stage.getBoundingClientRect();
+  if (!r.width || !r.height) return;
+  k = clampK(Math.min(r.width / WORLD.w, r.height / WORLD.h) * 0.94);
+  tx = (r.width  - WORLD.w * k)/2 - WORLD.x * k;
+  ty = (r.height - WORLD.h * k)/2 - WORLD.y * k;
+  apply();
+}
+
+function zoomAt(px, py, factor){
+  const next = clampK(k * factor);
+  if (next === k) return;
+  tx = px - (px - tx) * (next / k);
+  ty = py - (py - ty) * (next / k);
+  k = next;
+  apply();
+}
+
+let dragging = false, lastX = 0, lastY = 0, moved = 0;
+stage.addEventListener("pointerdown", e => {
+  if (e.button !== 0) return;
+  dragging = true; moved = 0; lastX = e.clientX; lastY = e.clientY;
+  stage.classList.add("dragging");
+  stage.setPointerCapture(e.pointerId);
+});
+stage.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  moved += Math.abs(dx) + Math.abs(dy);
+  tx += dx; ty += dy; lastX = e.clientX; lastY = e.clientY;
+  apply();
+});
+function endDrag(e){
+  if (!dragging) return;
+  dragging = false;
+  stage.classList.remove("dragging");
+  try { stage.releasePointerCapture(e.pointerId); } catch { /* already released */ }
+  /* A drag that ends on the background is not a click to clear — otherwise
+     panning away from a selection silently discards it. */
+  if (moved < 4) clearAll();
+}
+stage.addEventListener("pointerup", endDrag);
+stage.addEventListener("pointercancel", endDrag);
+
+stage.addEventListener("wheel", e => {
+  const r = stage.getBoundingClientRect();
+  if (e.ctrlKey || e.metaKey){
+    e.preventDefault();
+    zoomAt(e.clientX - r.left, e.clientY - r.top, e.deltaY < 0 ? 1.12 : 1/1.12);
+  } else {
+    e.preventDefault();
+    tx -= e.deltaX; ty -= e.deltaY; apply();
+  }
+}, {passive:false});
+
+/* ── Highlighting ─────────────────────────────────────────────────────── */
+let selected = null, flow = null, cat = null;
+
+function paint(){
+  const hotEdges = new Set();
+  const hotNodes = new Set();
+
+  if (flow){
+    for (const id of FLOWS[flow].edges){
+      hotEdges.add(id);
+      const e = edgeEls.get(id);
+      if (e){ hotNodes.add(e.data.from); hotNodes.add(e.data.to); }
+    }
+  } else if (selected){
+    hotNodes.add(selected);
+    for (const e of EDGE_LIST){
+      if (e.from === selected || e.to === selected){
+        hotEdges.add(e.id); hotNodes.add(e.from); hotNodes.add(e.to);
+      }
+    }
+  } else if (cat){
+    for (const n of NODES) if (n.cat === cat) hotNodes.add(n.id);
+  }
+
+  const active = flow || selected || cat;
+
+  for (const [id, g] of nodeEls){
+    g.classList.toggle("dim", !!active && !hotNodes.has(id));
+    g.classList.toggle("sel", id === selected);
+  }
+  for (const [id, e] of edgeEls){
+    const hot = hotEdges.has(id);
+    e.line.classList.toggle("hot", hot);
+    e.line.classList.toggle("dim", !!active && !hot);
+    e.line.setAttribute("marker-end", hot ? "url(#a-hot)" : "url(#a-nrm)");
+    e.text.classList.toggle("hot", hot);
+    const shown = hot ? 1 : e.crowded ? 0 : active ? 0.22 : 1;
+    e.text.style.opacity = shown;
+    e.plate.style.opacity = shown;
+  }
+
+  document.getElementById("flowPublish").setAttribute("aria-pressed", String(flow === "publish"));
+  document.getElementById("flowView").setAttribute("aria-pressed", String(flow === "view"));
+  for (const b of document.querySelectorAll("#legendItems button")){
+    b.setAttribute("aria-pressed", String(b.dataset.cat === cat));
+  }
+}
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function showNode(id){
+  const n = byId.get(id);
+  const out = EDGE_LIST.filter(e => e.from === id);
+  const inc = EDGE_LIST.filter(e => e.to === id);
+  const conn = list => list.map(e => {
+    const peer = byId.get(e.from === id ? e.to : e.from);
+    return `<div class="conn"><span class="dir">${e.from === id ? "→" : "←"}</span>
+      <span><span class="peer">${esc(peer.name)}</span>
+      <span class="via"> · ${esc(e.label)}</span></span></div>`;
+  }).join("");
+
+  inspector.innerHTML = `
+    <h2>${esc(n.name)}</h2>
+    <div class="kind"><span class="swatch" style="color:var(${CATS[n.cat].v})"></span>
+      ${esc(CATS[n.cat].label)} · <span class="mono">${esc(n.meta)}</span></div>
+    <p class="desc">${esc(n.desc)}</p>
+    <p class="sect">Responsibilities</p>
+    <ul>${n.does.map(d => `<li>${esc(d)}</li>`).join("")}</ul>
+    ${out.length ? `<p class="sect">Calls</p>${conn(out)}` : ""}
+    ${inc.length ? `<p class="sect">Called by</p>${conn(inc)}` : ""}`;
+}
+
+function showFlow(name){
+  const f = FLOWS[name];
+  inspector.innerHTML = `
+    <h2>${esc(f.title)}</h2>
+    <p class="desc">${esc(f.blurb)}</p>
+    <p class="sect">End to end</p>
+    <ol class="steps">${f.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>`;
+}
+
+function showEmpty(){
+  inspector.innerHTML = `<h2>Inspector</h2><p class="empty">Select a node to see what it is
+    responsible for and what it talks to. Use the flow buttons to trace the publish and view
+    paths end to end.</p>`;
+}
+
+function selectNode(id){ selected = id; flow = null; cat = null; showNode(id); paint(); }
+function selectFlow(name){
+  flow = flow === name ? null : name; selected = null; cat = null;
+  flow ? showFlow(flow) : showEmpty();
+  paint();
+}
+function selectCat(next){
+  cat = cat === next ? null : next; selected = null; flow = null;
+  showEmpty(); paint();
+}
+function clearAll(){ selected = null; flow = null; cat = null; showEmpty(); paint(); }
+
+/* ── Controls ─────────────────────────────────────────────────────────── */
+const legend = document.getElementById("legendItems");
+for (const [id, c] of Object.entries(CATS)){
+  const b = document.createElement("button");
+  b.type = "button"; b.dataset.cat = id; b.setAttribute("aria-pressed", "false");
+  b.innerHTML = `<span class="swatch" style="color:var(${c.v})"></span>${c.label}`;
+  b.addEventListener("click", () => selectCat(id));
+  legend.appendChild(b);
+}
+
+document.getElementById("flowPublish").addEventListener("click", () => selectFlow("publish"));
+document.getElementById("flowView").addEventListener("click", () => selectFlow("view"));
+document.getElementById("clear").addEventListener("click", clearAll);
+document.getElementById("fit").addEventListener("click", fit);
+document.getElementById("reset").addEventListener("click", () => { clearAll(); fit(); });
+document.getElementById("zoomIn").addEventListener("click", () => {
+  const r = stage.getBoundingClientRect(); zoomAt(r.width/2, r.height/2, 1.18);
+});
+document.getElementById("zoomOut").addEventListener("click", () => {
+  const r = stage.getBoundingClientRect(); zoomAt(r.width/2, r.height/2, 1/1.18);
+});
+
+/* Theme: an explicit choice wins over the system, and is remembered per
+   browser. Every storage access is guarded — a private window or a browser
+   set to block site data throws on read, and an unhandled throw here would
+   leave the page blank rather than merely unthemed. */
+const root = document.documentElement;
+try {
+  const saved = localStorage.getItem("arch-diagram-theme");
+  if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  else root.removeAttribute("data-theme");
+} catch { /* no stored preference available */ }
+
+document.getElementById("theme").addEventListener("click", () => {
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const current = root.getAttribute("data-theme") || (dark ? "dark" : "light");
+  const next = current === "dark" ? "light" : "dark";
+  root.setAttribute("data-theme", next);
+  try { localStorage.setItem("arch-diagram-theme", next); } catch { /* not persisted */ }
+});
+
+addEventListener("keydown", e => {
+  if (e.target !== document.body && e.target.tagName === "INPUT") return;
+  if (e.key === "Escape") clearAll();
+  else if (e.key === "f" || e.key === "F") fit();
+  else if (e.key === "1") selectFlow("publish");
+  else if (e.key === "2") selectFlow("view");
+});
+
+addEventListener("resize", fit);
+fit();
+paint();
+</script>
+</body>
+</html>
