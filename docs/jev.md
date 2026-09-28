@@ -153,7 +153,7 @@ TYPESAFE_API_KEY=... npm run verify
 ```
 
 It asks Jev about two steps whose answers are not in doubt — `DROP DATABASE
-production` and `ls -la` — and checks eleven things: that the response carries
+production` and `ls -la` — and checks thirteen things: that the response carries
 the model and its token usage, that a `noul` comes back as a probability
 between zero and one, that a `score` carries a confidence, a legend and a
 probability per level, that a `choice` returns one of its own labels, that the
