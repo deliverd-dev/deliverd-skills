@@ -1,0 +1,16 @@
+{
+  "name": "deliverd-example-report-sign-off",
+  "private": true,
+  "type": "module",
+  "description": "An AI writes a client report; a partner signs it off before it leaves.",
+  "scripts": {
+    "start": "node sign-off.mjs",
+    "changes-requested": "DEMO_OUTCOME=rejected node sign-off.mjs"
+  },
+  "dependencies": {
+    "@deliverd/sdk": "^0.6.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

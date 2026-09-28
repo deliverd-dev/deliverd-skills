@@ -6,7 +6,7 @@
     "name": "Deliverd",
     "url": "https://deliverd.dev"
   },
-  "homepage": "https://deliverd.dev/developers",
+  "homepage": "https://deliverd.dev/docs/developers",
   "license": "MIT",
   "keywords": ["human-in-the-loop", "approval", "review", "agents", "mcp", "publish", "reports"],
   "mcpServers": {

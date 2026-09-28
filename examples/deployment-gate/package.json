@@ -1,0 +1,17 @@
+{
+  "name": "deliverd-example-deployment-gate",
+  "private": true,
+  "type": "module",
+  "description": "A deploy that waits for a person to approve it.",
+  "scripts": {
+    "start": "node gate.mjs",
+    "rejected": "DEMO_OUTCOME=rejected node gate.mjs",
+    "asks-a-question": "DEMO_OUTCOME=question node gate.mjs"
+  },
+  "dependencies": {
+    "@deliverd/sdk": "^0.6.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "deliverd-example-purchase-approval",
+  "private": true,
+  "type": "module",
+  "description": "An agent asks a person before it spends money.",
+  "scripts": {
+    "start": "node purchase.mjs",
+    "rejected": "DEMO_OUTCOME=rejected node purchase.mjs",
+    "no-answer": "DEMO_OUTCOME=timeout node purchase.mjs"
+  },
+  "dependencies": {
+    "@deliverd/sdk": "^0.6.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

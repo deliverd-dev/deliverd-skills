@@ -1,0 +1,19 @@
+{
+  "name": "deliverd-example-jev-escalation",
+  "private": true,
+  "type": "module",
+  "description": "Jev settles the routine step; a person settles the rest.",
+  "scripts": {
+    "start": "node escalate.mjs",
+    "routine": "DEMO_JEV=routine node escalate.mjs",
+    "rejected": "DEMO_OUTCOME=rejected node escalate.mjs",
+    "verify": "node verify.mjs"
+  },
+  "dependencies": {
+    "@deliverd/sdk": "^0.8.0",
+    "@typesafe-ai/sdk": "^0.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

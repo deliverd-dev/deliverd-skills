@@ -1,7 +1,17 @@
 # Deliverd skills
 
 Open-source [agent skills](https://code.claude.com/docs) for Claude Code,
-Codex and Cursor. MIT licensed, no dependencies, no account needed.
+Codex and Cursor, plus runnable examples and developer docs for
+[Deliverd](https://deliverd.dev), the human layer for AI agents. MIT licensed,
+no dependencies, no account needed.
+
+| Folder | What's in it |
+|---|---|
+| [`skills/`](./skills) | The three agent skills below |
+| [`examples/`](./examples) | Four small programs — a deployment gate, a purchase approval, a report sign-off and a Jev escalation — that run with no account and no keys |
+| [`docs/`](./docs) | How to use Deliverd from code: the REST API, CLI, MCP setup, CI, single sign-on, Slack and Teams, SharePoint and Jev |
+
+The full documentation is at [deliverd.dev/docs](https://deliverd.dev/docs).
 
 | Skill | What it does |
 |---|---|
@@ -161,7 +171,7 @@ know before opening a pull request:
   this skill teaches a call that no longer exists. Suggest wording and
   judgement changes freely; for anything that names an API, say what you
   checked it against.
-- **`examples/` is verified, not decorative.** Every example is run through
+- **`skills/artifact/examples/` is verified, not decorative.** Every example is run through
   the same secret scanner, external-reference analyser and heuristic scanner
   that a real publish uses. An example containing a CDN `<script src>` or an
   invented-but-realistic API key fails that check, by design. That test lives
