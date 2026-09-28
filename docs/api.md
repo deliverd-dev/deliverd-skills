@@ -35,8 +35,9 @@ Two differences worth knowing:
 
 - **Membership is re-checked on every request.** A token outlives a person's
   membership, so somebody removed from an organisation loses API access at
-  that moment rather than whenever their token expires. An API key does not
-  work this way — revoke it explicitly.
+  that moment rather than whenever their token expires. A person's API key
+  works the same way: it is refused while its owner is suspended, and
+  removing somebody revokes their keys outright.
 - **The principal is always a user**, never an agent. Agent-policy rules that
   key off an agent identity do not apply to a connector; the acting person is
   who the audit trail names.
@@ -915,7 +916,9 @@ longer performs.
 keyed on the action id: an agent able to name actions could define the
 vocabulary its own policy is written against — register `finance.refund_v2`
 and gate on that rather than on the `finance.refund` everybody wrote rules
-for. Register from your deploy, with a key bound to a person.
+for. Register from your deploy, with a key bound to a person who is an owner
+or administrator; any other member gets `403 not_permitted`, because
+registering rewrites an existing action's schema and default risk.
 
 The schema is a small subset of JSON Schema, written out rather than depended
 upon so both SDKs can carry it: `type`, `properties`, `required`, fields of
