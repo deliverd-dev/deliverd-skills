@@ -26,6 +26,16 @@ claude plugin marketplace add deliverd-dev/deliverd-skills
 claude plugin install deliverd@deliverd
 ```
 
+The plugin also adds three commands:
+
+| Command | Does |
+|---|---|
+| `/deliverd:publish` | Publish an HTML page to a persistent, secure URL, asking who should see it |
+| `/deliverd:ask` | Ask a person to approve something, wait for the answer and act on it |
+| `/deliverd:status` | Who you are signed in as, and the workspaces you can publish to |
+
+Already installed? `claude plugin marketplace update deliverd`, then `claude plugin update deliverd@deliverd`.
+
 Or one skill at a time, for any agent, as below.
 
 ## approval

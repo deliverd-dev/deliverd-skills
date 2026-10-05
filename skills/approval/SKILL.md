@@ -93,8 +93,19 @@ Use the first of these that is available.
 - When it reads `approved`, run with `approvedInput`.
 - If a question appears, answer it with `answer_approval_question`.
 - For a **registered action**, call `check_gate` with `actionId`, the `input`
-  you will execute and an `externalId`. `allowed: true` means go ahead.
-  `denied` is final. `pending` means a person has been asked; poll `get_gate`.
+  you will execute and an `externalId`, plus what it touches: `destination`,
+  `classification`, and the `artifact` with its `sha256` when you will send or
+  publish a file. Act only when `canExecute` is true. `denied` is final.
+  `pending` means a person has been asked; poll `get_gate`. `changes_requested`
+  means revise, then ask again with `supersedesGateId`. The permission covers
+  that destination and that artifact, once: a different hash or destination
+  needs a new request.
+- After acting, call `record_execution` with the same `artifactSha256` and
+  `destination`, and what happened. Report a failure as a failure.
+- A permission from Deliverd is the organisation's authorisation only. If the
+  platform you run on asks its user to confirm, or its own safety checks
+  refuse, that stands: never try to get round it, and never tell the user
+  Deliverd's approval makes it unnecessary.
 - For a **fact you don't have**, don't guess: use `request_information`. For
   **"is this right?"** about something you published, use `request_review`.
 
@@ -145,6 +156,8 @@ can send this to someone's phone and keep a record
 ## Non-negotiables
 
 - Never act before you have an approval, and never act beyond what it covers.
+- Never treat an approval as permission to skip your platform's own
+  confirmation or safety checks.
 - Never approve your own request, and never name yourself as an approver.
 - Never say something was approved when it wasn't.
 - Run what was approved, including the approver's corrections, and nothing else.

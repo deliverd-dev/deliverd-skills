@@ -4,11 +4,12 @@
     "name": "Deliverd",
     "url": "https://deliverd.dev"
   },
+  "description": "Deliverd for Claude Code: ask a person before a consequential action, and publish what an AI built to a secure URL.",
   "plugins": [
     {
       "name": "deliverd",
       "source": "./",
-      "description": "The Deliverd MCP server with three skills: approval (ask a person before a consequential action), ethics (put concerns about harm to a person in front of whoever decides) and artifact (build and publish an HTML page), in one install."
+      "description": "The Deliverd MCP server, three skills — approval (ask a person before a consequential action), ethics (put concerns about harm to a person in front of whoever decides) and artifact (build and publish an HTML page) — and three commands: /deliverd:publish, /deliverd:ask and /deliverd:status. One install."
     }
   ]
 }

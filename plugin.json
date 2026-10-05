@@ -1,0 +1,37 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "deliverd",
+  "version": "1.1.0",
+  "description": "Your organisation's approvals for AI agents: ask policy before a consequential action, get a person's decision when policy says so, and keep evidence of what was approved and what was done.",
+  "author": {
+    "name": "Deliverd",
+    "url": "https://deliverd.dev"
+  },
+  "homepage": "https://deliverd.dev/docs/developers/openai",
+  "repository": "https://github.com/deliverd-dev/deliverd-skills",
+  "license": "MIT",
+  "keywords": ["approval", "governance", "human-in-the-loop", "policy", "evidence", "mcp"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Deliverd",
+        "shortDescription": "Organisation approvals and evidence for agent actions",
+        "longDescription": "Before a dot sends a confidential report outside the company, publishes something, or moves money, it asks your organisation's policy through Deliverd. Policy allows it, refuses it, or sends it to the right person, who approves exactly that artifact and destination. The dot acts only on a permission, reports what it did, and every step lands in an evidence pack. Deliverd records your organisation's authorisation; ChatGPT's own confirmations and safety checks still apply.",
+        "developerName": "Deliverd",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://deliverd.dev",
+        "privacyPolicyURL": "https://deliverd.dev/legal/privacy",
+        "termsOfServiceURL": "https://deliverd.dev/legal/terms",
+        "defaultPrompt": [
+          "Before you send this report to the client, check it is approved",
+          "Publish the portfolio report once compliance has approved it",
+          "Show me which of my requests are still waiting on someone"
+        ],
+        "brandColor": "#111111",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/logo.png"
+      }
+    }
+  }
+}
