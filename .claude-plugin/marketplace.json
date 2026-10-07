@@ -9,7 +9,7 @@
     {
       "name": "deliverd",
       "source": "./",
-      "description": "The Deliverd MCP server, three skills — approval (ask a person before a consequential action), ethics (put concerns about harm to a person in front of whoever decides) and artifact (build and publish an HTML page) — and three commands: /deliverd:publish, /deliverd:ask and /deliverd:status. One install."
+      "description": "The Deliverd MCP server, four skills — approval (ask a person before a consequential action), ethics (put concerns about harm to a person in front of whoever decides), artifact (build and publish an HTML page) and tasks (keep long work on its objective) — and three commands: /deliverd:publish, /deliverd:ask and /deliverd:status. One install."
     }
   ]
 }

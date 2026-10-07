@@ -7,7 +7,7 @@ no dependencies, no account needed.
 
 | Folder | What's in it |
 |---|---|
-| [`skills/`](./skills) | The three agent skills below |
+| [`skills/`](./skills) | The four agent skills below |
 | [`examples/`](./examples) | Four small programs — a deployment gate, a purchase approval, a report sign-off and a Jev escalation — that run with no account and no keys |
 | [`docs/`](./docs) | How to use Deliverd from code: the REST API, CLI, MCP setup, CI, single sign-on, Slack and Teams, SharePoint and Jev |
 
@@ -18,8 +18,9 @@ The full documentation is at [deliverd.dev/docs](https://deliverd.dev/docs).
 | [`approval`](./skills/approval) | Stop and ask a person before anything consequential: when to ask, how to write a request someone can decide from a phone, and how to act on the answer |
 | [`ethics`](./skills/ethics) | Notice when work could harm or wrong a person, and put that concern in front of whoever decides — never around them |
 | [`artifact`](./skills/artifact) | Build a beautiful, self-contained HTML report, dashboard, diagram, executive summary, plan or prototype — then offer to publish it |
+| [`tasks`](./skills/tasks) | Keep long work aimed at its goal: state the objective, keep a short working state, branch a problem into a side task and bring its result back, and leave decisions to a person |
 
-### Install all three, with the Deliverd MCP server (Claude Code)
+### Install all four, with the Deliverd MCP server (Claude Code)
 
 ```bash
 claude plugin marketplace add deliverd-dev/deliverd-skills
@@ -166,6 +167,31 @@ If you do want it, connecting is one command — see
 [/codex](https://deliverd.dev/codex), [/cursor](https://deliverd.dev/cursor)
 or [/chatgpt](https://deliverd.dev/chatgpt).
 
+## tasks
+
+Long work loses its goal. An agent starts on an objective, meets an error,
+debugs it, researches an API, tries an alternative — and forty turns later
+nobody, the agent included, can say what the work was for. This skill keeps
+the goal somewhere the conversation cannot bury it, and has the agent branch
+the problem rather than the conversation.
+
+It teaches the agent to state the objective as an outcome, keep a short
+working state instead of relying on the history, suggest a side task (asking
+first) when a problem starts to take over, come back with a structured result,
+and re-anchor on the objective. Decisions it records stay suggestions until a
+person confirms them, and it never records its private reasoning.
+
+### Install
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill tasks
+```
+
+It works with no account: the agent keeps the objective and state in the
+conversation. With [Deliverd](https://deliverd.dev) connected, the objective,
+side tasks, findings and decisions live in Deliverd's Task Graph, survive
+restarts and new sessions, and a decision can be put to a person for approval.
+
 ## Contributing
 
 The playbooks are opinions, and better opinions are welcome. Two things to
@@ -176,7 +202,7 @@ know before opening a pull request:
   than loudly — a CDN script from an unlisted host publishes with only a
   warning and then renders blank. Check a claim against the behaviour before
   changing it; a plausible edit is exactly how that file goes wrong.
-- **`skills/approval` and `skills/ethics` name real tools, fields and rules.** Each one is
+- **`skills/approval`, `skills/ethics` and `skills/tasks` name real tools, fields and rules.** Each one is
   checked against the Deliverd code, so a rename there fails a test before
   this skill teaches a call that no longer exists. Suggest wording and
   judgement changes freely; for anything that names an API, say what you
