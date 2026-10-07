@@ -24,6 +24,10 @@ At the start of substantial work, record the objective with `create_task`:
   If you are restarted and call `create_task` again with the same one, you
   get the open objective back instead of a second one.
 
+**Look before you start.** In a new conversation, call `list_tasks` first:
+the work may already have an objective, and resuming it keeps its state,
+decisions and side tasks. Read one in full with `get_task`.
+
 Small, single-step requests do not need an objective. Neither does a
 conversation that is only questions and answers.
 
