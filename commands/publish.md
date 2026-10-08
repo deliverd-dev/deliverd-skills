@@ -14,7 +14,9 @@ Publish to Deliverd: $ARGUMENTS
    ("Finance team", "Sarah Jones", "only me"); otherwise ask, offering
    "only me" as the safe default. Never choose "everyone" on your own.
 3. Call `publish_report` with `content` (or `files` for a multi-file bundle),
-   `title`, `audience` and `sourceTool: "claude-code"`.
+   `title`, `audience` and `sourceTool: "claude-code"`. If the page reports on
+   a Deliverd task you are working on, write it from `get_task_context` first
+   and pass that task's id as `taskId`, so the report is kept with the task.
 4. If the result lists audience candidates because a phrase was ambiguous,
    show them and ask which was meant, then call `publish_report` again.
 5. If `status` is `pending_approval`, say the report is held for approval
