@@ -8,7 +8,7 @@
   },
   "homepage": "https://deliverd.dev/docs/developers",
   "license": "MIT",
-  "keywords": ["human-in-the-loop", "approval", "review", "agents", "mcp", "publish", "reports"],
+  "keywords": ["human-in-the-loop", "approval", "review", "gates", "tasks", "agents", "mcp", "publish"],
   "mcpServers": {
     "deliverd": {
       "type": "http",

@@ -78,7 +78,7 @@ A single HTML document is the simple case. For a bundle:
 - No `..`, no absolute paths, no drive letters. Maximum depth 10.
 - **`_data/` at the top level is refused.** That prefix serves live datasets.
 - Allowed extensions: `.html .htm .css .js .mjs .json .svg .png .jpg .jpeg
-  .gif .webp .ico .avif .woff .woff2 .ttf .txt .csv .md .map .mp4 .webm`.
+  .gif .webp .ico .avif .woff .woff2 .ttf .txt .csv .md .map .mp4 .webm .vtt`.
   Anything else fails the publish.
 - Markdown in a bundle is rendered to HTML, with raw HTML inside it escaped
   rather than passed through.
@@ -90,6 +90,23 @@ A single HTML document is the simple case. For a bundle:
 | Inline `content` (MCP or REST) | 2 MB |
 | Inline `files` array | 50 entries, 2 MB each; binary as base64 with `encoding: "base64"` |
 | Zip or folder upload | 500 files, 50 MB zipped, 150 MB unpacked, 30 MB per file |
+| Video (`.mp4`, `.webm`) in a zip upload | Team, Business and Enterprise only: 200 MB per video and 200 MB of video in all, on top of the limits above |
+
+Video is a paid-plan feature. On Free, a bundle with an `.mp4` or `.webm` in
+it is refused with `feature_unavailable` and a message naming the plans that
+include it and where to upgrade: pass that on to the person, or publish
+without the video. Video must go in a zip upload (the CLI, the SDK, the REST
+upload or the web app); it is too large for the inline `files` array.
+Reference it with a relative path, `<video src="clip.mp4" controls>`, and it
+streams with seeking. Always include `controls`: without it the browser shows
+no player at all. Subtitles go beside it as WebVTT, `<track kind="subtitles"
+src="clip.en.vtt" srclang="en" label="English" default>`.
+
+A video with no page of its own needs no HTML: publish the `.mp4` alone, or a
+folder of just the video and its `.vtt` files, and Deliverd writes the page,
+titled from the publish's title or the file name, with the subtitles attached
+(`clip.vtt`, or `clip.en.vtt`, `clip.fr.vtt` for each language). If the organisation later leaves a paid plan, its
+videos stop playing and readers see a note saying why.
 
 A binary asset goes through the inline `files` array as base64: set
 `encoding: "base64"` on that entry and it is decoded into the bundle. Data

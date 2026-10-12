@@ -4,12 +4,12 @@
     "name": "Deliverd",
     "url": "https://deliverd.dev"
   },
-  "description": "Deliverd for Claude Code: ask a person before a consequential action, and publish what an AI built to a secure URL.",
+  "description": "Give any AI agent a way to ask a person — for approval, a decision, an answer or a review.",
   "plugins": [
     {
       "name": "deliverd",
       "source": "./",
-      "description": "The Deliverd MCP server, four skills — approval (ask a person before a consequential action), ethics (put concerns about harm to a person in front of whoever decides), artifact (build and publish an HTML page) and tasks (keep long work on its objective) — and three commands: /deliverd:publish, /deliverd:ask and /deliverd:status. One install."
+      "description": "Human-in-the-loop for Claude Code: the Deliverd MCP server, four skills — approval (ask a person before a consequential action), tasks (keep long work on its objective), ethics (put concerns about harm to a person in front of whoever decides) and artifact (build and publish an HTML page) — and three commands: /deliverd:ask, /deliverd:status and /deliverd:publish. One install."
     }
   ]
 }

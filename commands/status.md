@@ -1,5 +1,5 @@
 ---
-description: Check the Deliverd connection — who you are signed in as, and where you can publish
+description: Check the Deliverd connection — who you are signed in as, your organisation, and the workspaces you can ask, track and publish in
 ---
 
 Check the Deliverd connection.
