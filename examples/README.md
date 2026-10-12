@@ -56,8 +56,9 @@ and your process continues where it was waiting.
 
 ## What is not here
 
-These cover approvals and reviews. The other two request primitives —
-`collect()` for facts an agent does not have, and `flows` for tying a job's
-requests together — are documented in the
+These cover approvals and reviews. The other primitives — `collect()` for
+facts an agent does not have, `gate()` for asking the organisation's policy
+before a registered action — and `flows`, which tie a job's requests
+together, are documented in the
 [SDK README](https://www.npmjs.com/package/@deliverd/sdk) and behave the same
 way, including in development mode.

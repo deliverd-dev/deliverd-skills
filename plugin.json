@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "deliverd",
   "version": "1.1.0",
-  "description": "Your organisation's approvals for AI agents: ask policy before a consequential action, get a person's decision when policy says so, and keep evidence of what was approved and what was done.",
+  "description": "Give any AI agent a way to ask a person — for approval, a decision, an answer or a review.",
   "author": {
     "name": "Deliverd",
     "url": "https://deliverd.dev"
@@ -24,8 +24,8 @@
         "privacyPolicyURL": "https://deliverd.dev/legal/privacy",
         "termsOfServiceURL": "https://deliverd.dev/legal/terms",
         "defaultPrompt": [
-          "Before you send this report to the client, check it is approved",
-          "Publish the portfolio report once compliance has approved it",
+          "Ask the Finance team to approve this refund before I issue it",
+          "Ask the account owner for the renewal date before I draft the notice",
           "Show me which of my requests are still waiting on someone"
         ],
         "brandColor": "#111111",
