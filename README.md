@@ -7,7 +7,7 @@ no dependencies, no account needed.
 
 | Folder | What's in it |
 |---|---|
-| [`skills/`](./skills) | The four agent skills below |
+| [`skills/`](./skills) | The five agent skills below |
 | [`examples/`](./examples) | Four small programs — a deployment gate, a purchase approval, a report sign-off and a Jev escalation — that run with no account and no keys |
 | [`docs/`](./docs) | How to use Deliverd from code: the REST API, CLI, MCP setup, CI, single sign-on, Slack and Teams, SharePoint and Jev |
 
@@ -19,8 +19,9 @@ The full documentation is at [deliverd.dev/docs](https://deliverd.dev/docs).
 | [`ethics`](./skills/ethics) | Notice when work could harm or wrong a person, and put that concern in front of whoever decides — never around them |
 | [`artifact`](./skills/artifact) | Build a beautiful, self-contained HTML report, dashboard, diagram, executive summary, plan or prototype — then offer to publish it |
 | [`tasks`](./skills/tasks) | Keep long work aimed at its goal: state the objective, keep a short working state, branch a problem into a side task and bring its result back, and leave decisions to a person |
+| [`compliance`](./skills/compliance) | Do AI work under an organisation's governance: describe the work, meet its controls with real evidence and eval results, ask the gate before acting, report incidents, and leave every judgement about its own oversight to a person |
 
-### Install all four, with the Deliverd MCP server (Claude Code)
+### Install all five, with the Deliverd MCP server (Claude Code)
 
 ```bash
 claude plugin marketplace add deliverd-dev/deliverd-skills
@@ -192,6 +193,34 @@ conversation. With [Deliverd](https://deliverd.dev) connected, the objective,
 side tasks, findings and decisions live in Deliverd's Task Graph, survive
 restarts and new sessions, and a decision can be put to a person for approval.
 
+## compliance
+
+Governance written up after the work is a story; governance recorded while
+the work happens is evidence. This skill has an agent keep that record honest
+as it goes: describe what the work is and what it touches, meet the controls
+that follow with real evidence (evaluation and red-team results included, and
+the release they tested), ask the governance gate before deploying, sending or
+publishing, and report what goes wrong at once, DORA incident reports
+included.
+
+An agent may raise risk, add facts, submit evidence and ask for approvals. It
+never lowers risk, sets its own thresholds, resolves its own incidents or
+approves its own controls: each of those is a person's. And it never calls
+the work compliant; the record assists audit, it certifies nothing.
+
+### Install
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill compliance
+```
+
+It works with no account: the agent keeps the same record in the
+conversation and waits for an explicit yes before anything goes live. With
+[Deliverd](https://deliverd.dev) connected (Compliance Mode, Business and
+Enterprise), the profile, controls, evidence, gate and evidence pack live in
+Deliverd, and evidence can be pulled from Langfuse, LangSmith, Braintrust or
+Weave with the organisation's own keys.
+
 ## Contributing
 
 The playbooks are opinions, and better opinions are welcome. Two things to
@@ -202,7 +231,7 @@ know before opening a pull request:
   than loudly — a CDN script from an unlisted host publishes with only a
   warning and then renders blank. Check a claim against the behaviour before
   changing it; a plausible edit is exactly how that file goes wrong.
-- **`skills/approval`, `skills/ethics` and `skills/tasks` name real tools, fields and rules.** Each one is
+- **`skills/approval`, `skills/ethics`, `skills/tasks` and `skills/compliance` name real tools, fields and rules.** Each one is
   checked against the Deliverd code, so a rename there fails a test before
   this skill teaches a call that no longer exists. Suggest wording and
   judgement changes freely; for anything that names an API, say what you
