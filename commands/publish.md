@@ -1,5 +1,6 @@
 ---
 description: Publish an HTML page to a persistent, secure Deliverd URL
+name: publish
 argument-hint: "[file or description] [for <audience>]"
 ---
 

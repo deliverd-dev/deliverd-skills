@@ -1,0 +1,20 @@
+{
+  "name": "deliverd",
+  "version": "1.2.0",
+  "description": "Human-in-the-loop for Grok: before a consequential action, Grok asks a named person, or your organisation's policy, through Deliverd and acts on the answer. Bundles the Deliverd MCP server (OAuth sign-in, no key to paste), the approval, tasks, ethics and artifact skills, and the /ask, /status and /publish commands.",
+  "author": {
+    "name": "Deliverd",
+    "url": "https://deliverd.dev"
+  },
+  "homepage": "https://deliverd.dev/docs/developers",
+  "repository": "https://github.com/deliverd-dev/deliverd-skills",
+  "license": "MIT",
+  "keywords": ["deliverd", "deliverd approval", "deliverd mcp", "ask deliverd", "deliverd.dev"],
+  "logo": "assets/icon.png",
+  "mcpServers": {
+    "deliverd": {
+      "type": "http",
+      "url": "https://deliverd.dev/api/mcp"
+    }
+  }
+}

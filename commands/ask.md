@@ -1,5 +1,6 @@
 ---
 description: Ask a person to approve something before you do it, and wait for the answer
+name: ask
 argument-hint: "<what you want to do> [approver: name, email or team]"
 ---
 

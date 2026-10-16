@@ -1,5 +1,6 @@
 ---
 description: Check the Deliverd connection — who you are signed in as, your organisation, and the workspaces you can ask, track and publish in
+name: status
 ---
 
 Check the Deliverd connection.

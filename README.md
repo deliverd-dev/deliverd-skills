@@ -38,6 +38,20 @@ The plugin also adds three commands:
 
 Already installed? `claude plugin marketplace update deliverd`, then `claude plugin update deliverd@deliverd`.
 
+### Grok and Cursor
+
+This repository is also a plugin for Grok (Grok Build and Grok Bot) and for
+Cursor: [`.grok-plugin/plugin.json`](./.grok-plugin/plugin.json) and
+[`.cursor-plugin/plugin.json`](./.cursor-plugin/plugin.json) bundle the same
+MCP server, skills and commands as the Claude Code plugin. In Grok Build, open
+`/plugin` and pick Deliverd; in Grok Bot or Cursor, add it from the plugin
+marketplace.
+
+- **Network:** the plugin talks only to `https://deliverd.dev/api/mcp`.
+- **Credentials:** none to paste. The MCP server signs you in with OAuth 2.1
+  in the browser on first use; a free account works.
+- **No hooks, no local code:** the skills and commands are Markdown.
+
 Or one skill at a time, for any agent, as below.
 
 ## approval
