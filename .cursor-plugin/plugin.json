@@ -1,7 +1,7 @@
 {
   "name": "deliverd",
-  "version": "1.2.0",
-  "description": "Human-in-the-loop for your agent: before a consequential action it asks a named person, or your organisation's policy, through Deliverd and acts on the answer. Bundles the Deliverd MCP server (OAuth sign-in, no key to paste), the approval, tasks, ethics and artifact skills, and the /ask, /status and /publish commands.",
+  "version": "1.3.0",
+  "description": "Human-in-the-loop for your agent: before a consequential action it asks a named person, or your organisation's policy, through Deliverd and acts on the answer. Bundles the Deliverd MCP server (OAuth sign-in, no key to paste), the approval, tasks, ethics, artifact and compliance skills, and the /ask, /status and /publish commands.",
   "author": {
     "name": "Deliverd"
   },
