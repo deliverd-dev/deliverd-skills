@@ -52,6 +52,24 @@ marketplace.
   in the browser on first use; a free account works.
 - **No hooks, no local code:** the skills and commands are Markdown.
 
+### Muse Code
+
+It is a plugin for Muse Code, Meta's coding agent, too:
+[`.muse-plugin/plugin.json`](./.muse-plugin/plugin.json) bundles the MCP
+server and the five skills. Muse Code's plugins are behind a flag for now:
+
+```bash
+export MUSE_EXPERIMENTAL_PLUGINS=1
+muse plugins marketplace add deliverd https://github.com/deliverd-dev/deliverd-skills
+muse plugins install deliverd@deliverd
+muse plugins approve deliverd
+muse mcp login deliverd
+```
+
+Without the flag, `npx deliverd setup --agent muse-code` adds the MCP server
+to Muse Code's settings, and Muse Code reads the skills from `~/.agents/skills`
+after `npx skills add deliverd-dev/deliverd-skills`.
+
 Or one skill at a time, for any agent, as below.
 
 ## approval
