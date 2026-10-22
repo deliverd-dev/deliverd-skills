@@ -109,8 +109,9 @@ call `check_governance_gate`.
   `scores` why each scored control passed or failed. Meet them (section 3), or
   tell the person exactly what is outstanding.
 - **`blockers`** (an open reassessment, an overdue review, a serious incident,
-  a DORA report past its deadline) are cleared only by a person. Say what they
-  are; don't work round them.
+  a DORA report past its deadline, and, where the organisation holds work to
+  its AI register, an AI system that is not live or is suspended) are cleared only by
+  a person. Say what they are; don't work round them.
 - **With `action`** (Enterprise), the gate also asks whether you may take that
   kind of action at all, as `check_agent_authority` does: approval means ask
   first with `check_gate` (the approval skill), denied means don't.

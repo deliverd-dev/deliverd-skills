@@ -1,10 +1,11 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "deliverd",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Give any AI agent a way to ask a person — for approval, a decision, an answer or a review.",
   "author": {
     "name": "Deliverd",
+    "email": "support@deliverd.dev",
     "url": "https://deliverd.dev"
   },
   "homepage": "https://deliverd.dev/docs/developers/openai",
@@ -15,22 +16,74 @@
     "com.openai": {
       "interface": {
         "displayName": "Deliverd",
-        "shortDescription": "Organisation approvals and evidence for agent actions",
+        "shortDescription": "Approvals before agents act",
         "longDescription": "Before a dot sends a confidential report outside the company, publishes something, or moves money, it asks your organisation's policy through Deliverd. Policy allows it, refuses it, or sends it to the right person, who approves exactly that artifact and destination. The dot acts only on a permission, reports what it did, and every step lands in an evidence pack. Deliverd records your organisation's authorisation; ChatGPT's own confirmations and safety checks still apply.",
         "developerName": "Deliverd",
         "category": "Productivity",
         "capabilities": ["Read", "Write"],
         "websiteURL": "https://deliverd.dev",
+        "supportURL": "https://deliverd.dev/contact",
         "privacyPolicyURL": "https://deliverd.dev/legal/privacy",
         "termsOfServiceURL": "https://deliverd.dev/legal/terms",
         "defaultPrompt": [
           "Ask the Finance team to approve this refund before I issue it",
           "Ask the account owner for the renewal date before I draft the notice",
-          "Show me which of my requests are still waiting on someone"
+          "Which comment threads on our reports are still open?"
         ],
         "brandColor": "#111111",
+        "brandColorDark": "#E8EBEF",
         "composerIcon": "./assets/icon.png",
         "logo": "./assets/logo.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Asks named people to approve a consequential action and reports that it is waiting, without claiming the action was done.",
+              "prompt": "Ask the Finance team to approve a 2,400 euro refund for order 8812 before I issue it.",
+              "tools_triggered": ["request_approval"],
+              "expected_behavior": "Creates an approval request naming the Finance team, returns its page URL and status pending, and tells the user the refund should wait for the decision."
+            },
+            {
+              "description": "Follows up on the approval from the first test case in the same conversation, and does not treat pending as approved.",
+              "prompt": "Has the Finance team decided on that refund yet?",
+              "tools_triggered": ["get_approval"],
+              "expected_behavior": "Reads the approval created in the first test case and reports its status, pending until someone in the demo account decides, with who decided and any question they asked."
+            },
+            {
+              "description": "Asks a person for information the agent cannot work out, as typed questions.",
+              "prompt": "Ask the account owner for Acme's renewal date and notice period before I draft the renewal notice.",
+              "tools_triggered": ["request_information"],
+              "expected_behavior": "Creates a request for information with a date question and a notice-period question, returns its page URL, and does not guess the values."
+            },
+            {
+              "description": "Lists every open comment thread across the organisation's reports, rendered as a read-only card.",
+              "prompt": "Which comment threads on our reports are still open?",
+              "tools_triggered": ["list_open_comments"],
+              "expected_behavior": "Shows the open threads grouped by report, with the quoted passage and who commented; the Cloud migration sign-off report has one in the demo account."
+            },
+            {
+              "description": "Publishes an HTML page the model wrote to a private, persistent URL.",
+              "prompt": "Turn this into a one-page HTML status report and publish it so only I can open it: Q3 claims closed 1,204, backlog down 8%.",
+              "tools_triggered": ["publish_report"],
+              "expected_behavior": "Publishes the page with the requester as its only audience and returns its URL; opening the URL signed in as the test account shows the report."
+            }
+          ],
+          "negative": [
+            {
+              "description": "General knowledge with nothing to approve, ask or record.",
+              "prompt": "What is the capital of Ireland?"
+            },
+            {
+              "description": "Creative writing for the user alone.",
+              "prompt": "Write a short poem about autumn in Dublin."
+            },
+            {
+              "description": "Arithmetic the model can do itself.",
+              "prompt": "What is 15% of 2,400?"
+            }
+          ]
+        }
       }
     }
   }

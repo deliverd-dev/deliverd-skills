@@ -7,6 +7,7 @@
     "url": "https://deliverd.dev"
   },
   "homepage": "https://deliverd.dev/docs/developers",
+  "privacyPolicyUrl": "https://deliverd.dev/legal/privacy",
   "license": "MIT",
   "keywords": ["human-in-the-loop", "approval", "review", "gates", "tasks", "compliance", "governance", "agents", "mcp", "publish"],
   "mcpServers": {
