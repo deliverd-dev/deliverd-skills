@@ -1,6 +1,6 @@
 ---
 name: tasks
-description: Keep long AI work aimed at its goal. Use it at the start of anything substantial (more than a few steps, or likely to involve debugging or research), when you resume work after a restart or a new session, and when a side problem starts to take over the conversation. It covers stating an objective, keeping a short working state instead of relying on the history, branching a problem into a side task and bringing its result back, recording findings a person can check, writing a status report from the task's record and keeping it with the task, and leaving decisions to a person. It works with the Deliverd MCP server, its SDKs or CLI, or in plain conversation when none is set up.
+description: Keep long AI work aimed at its goal. Use it at the start of anything substantial (more than a few steps, or likely to involve debugging or research), when you resume work after a restart or a new session, and when a side problem starts to take over the conversation. It covers stating an objective, keeping a short working state instead of relying on the history, branching a problem into a side task and bringing its result back, recording findings a person can check, writing a status report from the task's record and keeping it with the task, relying on and proposing the organisation's knowledge, running its playbooks, and leaving decisions to a person. It works with the Deliverd MCP server, its SDKs or CLI, or in plain conversation when none is set up.
 license: MIT
 ---
 
@@ -154,7 +154,27 @@ Never treat a suggested decision as made. Never describe it to the person as
 settled. If the work cannot go on without it, set the task's status to
 `awaiting_approval` and say what you are waiting for.
 
-## 9. Without Deliverd
+## 9. Use the organisation's knowledge and playbooks
+
+The context you read carries `knowledge`: entries a person in the
+organisation confirmed, relevant to this work. Rely on them over your own
+assumptions, and say so when one decides what you do. When you need more,
+call `search_knowledge`. Only a `confirmed` entry is settled; a `proposed` one
+is somebody's suggestion.
+
+When you learn something the next agent should know (a convention, a
+decision and why, a known issue and its workaround, who to ask about what),
+call `propose_knowledge` with one entry per thing. A person confirms it before
+anyone relies on it. Never put a secret, token or password in one: describe
+where it is kept instead.
+
+If the job is one the organisation has written down, call `list_playbooks`
+and run it with `start_playbook` rather than inventing your own steps. Each
+step's context names its rule: call `check_gate`, `request_approval` or
+`request_review` as it says before you act. You may draft a playbook with
+`draft_playbook`; only a person puts one in force.
+
+## 10. Without Deliverd
 
 With no MCP server, SDK or CLI set up, keep the same discipline in the
 conversation:
@@ -180,6 +200,9 @@ conversation:
 | Bring it back | `apply_side_task` | `task.apply()` | `task.apply()` | `deliverd tasks apply` |
 | Put a decision to approval | `request_decision_approval` | `task.requestDecisionApproval()` | `task.request_decision_approval()` | `deliverd tasks approve-decision` |
 | Publish the report for it | `publish_report` | `deliverd.reports.publish()` | `deliverd.reports.publish()` | `deliverd publish --task` |
+| Search the knowledge | `search_knowledge` | `deliverd.knowledge.search()` | `deliverd.knowledge.search()` | `deliverd knowledge search` |
+| Propose knowledge | `propose_knowledge` | `deliverd.knowledge.propose()` | `deliverd.knowledge.propose()` | `deliverd knowledge import` |
+| Run a playbook | `start_playbook` | `deliverd.playbooks.start()` | `deliverd.playbooks.start()` | `deliverd playbooks start` |
 
 The whole tree is `get_task_graph`. Connect the MCP server with
 `claude mcp add --transport http deliverd https://deliverd.dev/api/mcp`, or
