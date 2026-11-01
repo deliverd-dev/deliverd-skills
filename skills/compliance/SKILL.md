@@ -141,8 +141,8 @@ reason to skip them.
 ## 7. Frameworks and the evidence pack
 
 - `get_framework_mapping` shows how a framework (NIST AI RMF, ISO/IEC 42001,
-  the EU AI Act, the UK principles, DORA, SR 26-2, PRA SS1/23 or the
-  organisation's own) maps onto the controls, and with a `taskId` how far the
+  the EU AI Act, the UK principles, DORA, SR 26-2, PRA SS1/23, FCA AI good
+  practice or the organisation's own) maps onto the controls, and with a `taskId` how far the
   task covers it. It is a mapping for review: not legal advice, not a verdict.
 - `create_custom_framework` (Enterprise) drafts an organisation's own
   framework, for example from a policy a person gave you. It changes nothing

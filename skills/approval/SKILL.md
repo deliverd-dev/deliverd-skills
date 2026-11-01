@@ -87,6 +87,10 @@ Use the first of these that is available.
 - `request_approval` with `title`, `description`, `factors`, `risk`, `input`,
   `editableFields`, `approvers`, `expiresAt` and `externalId`. It returns a
   page `url` and status `pending`.
+- If a model or decision engine already reached a verdict, pass it as
+  `recommendation` (`verdict` approve or reject, with `confidence`,
+  `rationale` and `source`). It is context for the person, not the decision.
+  Some organisations show it only after the approver records their own view.
 - Poll `get_approval` with a growing interval: start around 30 seconds and
   slow down. A person takes as long as they take. If you can receive a POST,
   pass `callbackUrl` instead and skip polling.
