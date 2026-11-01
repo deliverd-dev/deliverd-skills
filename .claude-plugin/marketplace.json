@@ -9,7 +9,7 @@
     {
       "name": "deliverd",
       "source": "./",
-      "description": "Human-in-the-loop for Claude Code: the Deliverd MCP server, six skills — approval (ask a person before a consequential action), tasks (keep long work on its objective), ethics (put concerns about harm to a person in front of whoever decides), artifact (build and publish an HTML page), compliance (do AI work under an organisation's governance, with evidence an auditor can check) and screen (find and redact personal data and secrets before text reaches a model, locally) — and three commands: /deliverd:ask, /deliverd:status and /deliverd:publish. One install."
+      "description": "Human-in-the-loop for Claude Code: the Deliverd MCP server, nine skills — approval (ask a person before a consequential action), tasks (keep long work on its objective), ethics (put concerns about harm to a person in front of whoever decides), artifact (build and publish an HTML page), compliance (do AI work under an organisation's governance, with evidence an auditor can check), screen (find and redact personal data and secrets before text reaches a model, locally), prompts (use the organisation's approved prompts), policy (write approval rules as code, with tests) and checkpoint (put the approval step on the path to an action, not left to the agent) — and three commands: /deliverd:ask, /deliverd:status and /deliverd:publish. One install."
     }
   ]
 }

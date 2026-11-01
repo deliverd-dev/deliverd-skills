@@ -1,6 +1,6 @@
 {
   "name": "deliverd",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Give any AI agent a way to ask a person — for approval, a decision, an answer or a review.",
   "author": {
     "name": "Deliverd",
@@ -9,7 +9,7 @@
   "homepage": "https://deliverd.dev/docs/developers",
   "privacyPolicyUrl": "https://deliverd.dev/legal/privacy",
   "license": "MIT",
-  "keywords": ["human-in-the-loop", "approval", "review", "gates", "tasks", "compliance", "governance", "agents", "mcp", "publish"],
+  "keywords": ["human-in-the-loop", "approval", "review", "gates", "tasks", "compliance", "governance", "policy", "prompts", "agents", "mcp", "publish"],
   "mcpServers": {
     "deliverd": {
       "type": "http",

@@ -174,6 +174,10 @@ step's context names its rule: call `check_gate`, `request_approval` or
 `request_review` as it says before you act. You may draft a playbook with
 `draft_playbook`; only a person puts one in force.
 
+An approved prompt is a playbook of kind `prompt`: the organisation's agreed
+words for a piece of work. When one fits, take it with `use_prompt` rather
+than writing your own (the prompts skill covers this).
+
 ## 10. Without Deliverd
 
 With no MCP server, SDK or CLI set up, keep the same discipline in the

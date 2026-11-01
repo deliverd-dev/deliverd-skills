@@ -7,7 +7,7 @@ no dependencies, no account needed.
 
 | Folder | What's in it |
 |---|---|
-| [`skills/`](./skills) | The five agent skills below |
+| [`skills/`](./skills) | The nine agent skills below |
 | [`examples/`](./examples) | Four small programs — a deployment gate, a purchase approval, a report sign-off and a Jev escalation — that run with no account and no keys |
 | [`docs/`](./docs) | How to use Deliverd from code: the REST API, CLI, MCP setup, CI, single sign-on, Slack and Teams, SharePoint and Jev |
 
@@ -20,8 +20,12 @@ The full documentation is at [deliverd.dev/docs](https://deliverd.dev/docs).
 | [`artifact`](./skills/artifact) | Build a beautiful, self-contained HTML report, dashboard, diagram, executive summary, plan or prototype — then offer to publish it |
 | [`tasks`](./skills/tasks) | Keep long work aimed at its goal: state the objective, keep a short working state, branch a problem into a side task and bring its result back, and leave decisions to a person |
 | [`compliance`](./skills/compliance) | Do AI work under an organisation's governance: describe the work, meet its controls with real evidence and eval results, ask the gate before acting, report incidents, and leave every judgement about its own oversight to a person |
+| [`screen`](./skills/screen) | Check text for personal data, secrets and confidential terms before it goes to a model, and redact what should not go, locally with Deliverd Screen and no account |
+| [`prompts`](./skills/prompts) | Use the organisation's approved prompts instead of your own words when one fits, check what they produce against their limitations, and draft words that worked for a person to approve |
+| [`policy`](./skills/policy) | Help a person write the rules that decide what agents may do alone, what goes to a person and what is refused, as policy files with tests, replayed against past decisions and checked in CI |
+| [`checkpoint`](./skills/checkpoint) | Put the approval step on the path to a consequential action, in the system an agent runs in, rather than leaving it to the agent: MCP gateway, a gate in code, signed decision tokens, CI |
 
-### Install all five, with the Deliverd MCP server (Claude Code)
+### Install all nine, with the Deliverd MCP server (Claude Code)
 
 ```bash
 claude plugin marketplace add deliverd-dev/deliverd-skills
@@ -56,7 +60,7 @@ marketplace.
 
 It is a plugin for Muse Code, Meta's coding agent, too:
 [`.muse-plugin/plugin.json`](./.muse-plugin/plugin.json) bundles the MCP
-server and the five skills. Muse Code's plugins are behind a flag for now:
+server and the nine skills. Muse Code's plugins are behind a flag for now:
 
 ```bash
 export MUSE_EXPERIMENTAL_PLUGINS=1
@@ -253,6 +257,61 @@ Enterprise), the profile, controls, evidence, gate and evidence pack live in
 Deliverd, and evidence can be pulled from Langfuse, LangSmith, Braintrust or
 Weave with the organisation's own keys.
 
+## screen
+
+Text sent to a model is text you no longer control. This skill has an agent
+check it first, for email addresses, card numbers, IBANs, national ID
+numbers, keys, passwords and the organisation's own confidential terms, and
+then send it, send it redacted, ask a person, or send nothing. It runs
+locally with [Deliverd Screen](https://deliverd.dev/screen) (MIT, no
+account), as an MCP tool, a CLI or a library wired into the code that calls
+the model.
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill screen
+```
+
+## prompts
+
+When an organisation has found the words that get a piece of work right, an
+agent should use them rather than rediscover them. This skill has the agent
+look for an approved prompt first, take the version in force filled in with
+its inputs, use it as written and check the result against its limitations.
+When words it wrote worked well, it drafts them as a prompt for a person to
+approve. It never quietly improves the approved words.
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill prompts
+```
+
+## policy
+
+A rule that lets an agent act alone is the sentence that takes a person out
+of a decision. This skill helps a person write those rules: name the
+consequential actions, write policy files with test cases, replay a change
+against the decisions already made, and wire up CI that tests on a pull
+request and pushes on merge. The agent drafts; a person puts rules in force,
+and the agent never widens what it may do itself.
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill policy
+```
+
+## checkpoint
+
+A check an agent can skip is a suggestion. This skill is for whoever builds
+the system an agent runs in: find the one path to a consequential action,
+move the credential off the agent, and put the approval step there, with
+Deliverd's hosted MCP gateway, a gate in the code that acts, the signed
+decision token checked where the action happens, the
+[GitHub Action](https://github.com/deliverd-dev/approve-action) or the
+[AgentCore Gateway interceptor](https://github.com/deliverd-dev/aws-agentcore).
+It also says plainly what each one does not cover.
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill checkpoint
+```
+
 ## Contributing
 
 The playbooks are opinions, and better opinions are welcome. Two things to
@@ -263,7 +322,7 @@ know before opening a pull request:
   than loudly — a CDN script from an unlisted host publishes with only a
   warning and then renders blank. Check a claim against the behaviour before
   changing it; a plausible edit is exactly how that file goes wrong.
-- **`skills/approval`, `skills/ethics`, `skills/tasks` and `skills/compliance` name real tools, fields and rules.** Each one is
+- **Every skill except `artifact` names real tools, fields and rules.** Each one is
   checked against the Deliverd code, so a rename there fails a test before
   this skill teaches a call that no longer exists. Suggest wording and
   judgement changes freely; for anything that names an API, say what you

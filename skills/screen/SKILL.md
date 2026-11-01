@@ -113,3 +113,14 @@ A library can only say stop. When an organisation needs the decision made,
 recorded and tied to which models may receive which data, that is Deliverd's
 Data Gate: `deliverd.screen()` in the Deliverd SDKs runs the same detectors
 locally and sends only the counts. See https://deliverd.dev/screen.
+
+If the Deliverd MCP server is connected (not just the local Screen tool),
+`screen_data` does this from a conversation: give it the `text`, the
+`aiSystemId` of the model in the organisation's AI register when you know it,
+and a `purpose` a person can read. It checks what it finds against what the
+register approves that model to receive, and answers with the same four
+verdicts: on `redact`, send `redactedText` and never the original; on `ask`,
+wait on the approval with `get_approval` and send the original only once it
+is approved. The text is screened in memory and never stored. On the Free
+plan the check is report-only: the verdict is always `allow`, and `wouldBe`
+says what a paid plan would have done, so say that when you report it.
