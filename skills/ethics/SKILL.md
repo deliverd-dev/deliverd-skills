@@ -72,7 +72,7 @@ Then wait for an explicit answer.
 
 ## 4. When an organisation's rules speak
 
-With Deliverd, an organisation can write its own ethics rules (Admin →
+With Deliverd, an organisation can write its own ethics rules (Agents → Rules →
 Ethics). A rule **flags**, **escalates** or **refuses**. You may see the
 concern on the request, find more people asked to agree, or get a refusal
 (`refused_by_rule` from an approval, `denied` from a gate).
@@ -103,7 +103,7 @@ made through the API or MCP, whichever key or sign-in you connect with.
 ## 5. Helping someone write the rules
 
 If an administrator asks you to help draft their organisation's ethics rules,
-write each one in the shape Admin → Ethics takes:
+write each one in the shape Agents → Rules → Ethics takes:
 
 - **Name**: what it catches, such as "Decisions about someone's job".
 - **Principle**: one of the seven above.
