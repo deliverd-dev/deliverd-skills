@@ -113,9 +113,8 @@ write each one in the shape Agents → Rules → Ethics takes:
 - **What it does**: flag, escalate (how many people must agree, and who), or
   refuse. Start with flag. Escalate where one person's judgement is not enough.
   Refuse only for work the organisation has already decided it never does.
-- **What it matches.** Registered actions and their input come first, because
-  an agent cannot word its way around them (`hr.terminate`,
-  `amount over 10000`). Keywords come second, as a net for plain requests:
+- **What it matches.** Registered actions come first, because an agent
+  cannot word its way around them (`hr.terminate`). Keywords come second, as a net for plain requests:
   whole words, any case, a trailing `*` for a prefix (`redundan*`), at least
   three letters. Avoid words agents use about software. "child" matches "child
   process"; "fire" matches "fire the webhook".
@@ -123,6 +122,9 @@ write each one in the shape Agents → Rules → Ethics takes:
 Then advise turning rules on one at a time and watching what they flag for a
 week. A rule that flags everything gets clicked past, and then it protects
 nobody.
+
+For more than a rule or two, use the `ethics-rules` skill: where rules belong,
+a library to adapt, how to test keywords, and how to switch rules on.
 
 ## Non-negotiables
 

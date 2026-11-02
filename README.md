@@ -7,7 +7,7 @@ no dependencies, no account needed.
 
 | Folder | What's in it |
 |---|---|
-| [`skills/`](./skills) | The nine agent skills below |
+| [`skills/`](./skills) | The ten agent skills below |
 | [`examples/`](./examples) | Four small programs — a deployment gate, a purchase approval, a report sign-off and a Jev escalation — that run with no account and no keys |
 | [`docs/`](./docs) | How to use Deliverd from code: the REST API, CLI, MCP setup, CI, single sign-on, Slack and Teams, SharePoint and Jev |
 
@@ -17,6 +17,7 @@ The full documentation is at [deliverd.dev/docs](https://deliverd.dev/docs).
 |---|---|
 | [`approval`](./skills/approval) | Stop and ask a person before anything consequential: when to ask, how to write a request someone can decide from a phone, and how to act on the answer |
 | [`ethics`](./skills/ethics) | Notice when work could harm or wrong a person, and put that concern in front of whoever decides — never around them |
+| [`ethics-rules`](./skills/ethics-rules) | Help a person write, test and switch on their organisation's ethics rules, with a library of rules to adapt |
 | [`artifact`](./skills/artifact) | Build a beautiful, self-contained HTML report, dashboard, diagram, executive summary, plan or prototype — then offer to publish it |
 | [`tasks`](./skills/tasks) | Keep long work aimed at its goal: state the objective, keep a short working state, branch a problem into a side task and bring its result back, and leave decisions to a person |
 | [`compliance`](./skills/compliance) | Do AI work under an organisation's governance: describe the work, meet its controls with real evidence and eval results, ask the gate before acting, report incidents, and leave every judgement about its own oversight to a person |
@@ -25,7 +26,7 @@ The full documentation is at [deliverd.dev/docs](https://deliverd.dev/docs).
 | [`policy`](./skills/policy) | Help a person write the rules that decide what agents may do alone, what goes to a person and what is refused, as policy files with tests, replayed against past decisions and checked in CI |
 | [`checkpoint`](./skills/checkpoint) | Put the approval step on the path to a consequential action, in the system an agent runs in, rather than leaving it to the agent: MCP gateway, a gate in code, signed decision tokens, CI |
 
-### Install all nine, with the Deliverd MCP server (Claude Code)
+### Install all ten, with the Deliverd MCP server (Claude Code)
 
 ```bash
 claude plugin marketplace add deliverd-dev/deliverd-skills
@@ -60,7 +61,7 @@ marketplace.
 
 It is a plugin for Muse Code, Meta's coding agent, too:
 [`.muse-plugin/plugin.json`](./.muse-plugin/plugin.json) bundles the MCP
-server and the nine skills. Muse Code's plugins are behind a flag for now:
+server and the ten skills. Muse Code's plugins are behind a flag for now:
 
 ```bash
 export MUSE_EXPERIMENTAL_PLUGINS=1
@@ -132,6 +133,30 @@ and waits for your answer. It pairs with `approval`, which covers how a
 request is written and sent. With [Deliverd](https://deliverd.dev) connected,
 the concern reaches the approver's email, Slack, Teams or phone as part of
 the request, beside any concern the organisation's own rules add.
+
+## ethics-rules
+
+For whoever writes an organisation's ethics rules, and for an agent helping
+them. It finds where rules belong (the actions an agent cannot word its way
+around first), adapts the starter rules and a library of thirteen more in
+`references/library.json`, and picks keywords that don't fire on everyday
+software talk: "child" catches "child process", "debt" catches "tech debt".
+Each library rule carries requests it should catch and requests it should
+leave alone, so you can test it the same way before anyone switches it on.
+Then it switches rules on one at a time and tunes them from what approvers
+actually did.
+
+The agent drafts. A person adds each rule and switches it on. There is no
+rule that allows: a rule can only add oversight.
+
+### Install
+
+```bash
+npx skills add deliverd-dev/deliverd-skills --skill ethics-rules
+```
+
+It works as a design exercise with no account. With
+[Deliverd](https://deliverd.dev), the rules go in Agents → Rules → Ethics.
 
 ## artifact
 

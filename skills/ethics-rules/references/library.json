@@ -1,0 +1,180 @@
+{
+  "about": "Ethics rules to adapt, grouped by the kind of work they watch. Each one is in the shape Agents → Rules → Ethics takes, and each carries requests it should catch and requests it should leave alone. None is right as it stands for every organisation: change the keywords to the words your own agents and people use, and test them the same way before switching a rule on.",
+  "areas": [
+    {
+      "id": "people",
+      "title": "People, hiring and pay",
+      "rules": [
+        {
+          "name": "Screening job applicants",
+          "principle": "fairness",
+          "concern": "This sorts or filters people applying for a job. Are the criteria relevant to the role, applied the same way to everyone, and free of anything that could stand in for a protected characteristic, such as a career gap, age or postcode?",
+          "effect": "flag",
+          "match": { "keywords": ["shortlist candidates", "shortlist applicants", "screen candidates", "screen applicants", "rank candidates", "rank applicants", "cv screening", "resume screening", "job applicant*"] },
+          "examples": {
+            "catches": ["Rank applicants for the warehouse supervisor role by fit", "Screen candidates who have a gap of more than a year"],
+            "ignores": ["Rank the search results by relevance", "Shortlist three vendors for the database migration"]
+          }
+        },
+        {
+          "name": "Pay, promotion and performance",
+          "principle": "fairness",
+          "concern": "This affects someone's pay, promotion or rating. Is it based on evidence about their work, and would the same evidence lead to the same outcome for anyone else?",
+          "effect": "flag",
+          "match": { "keywords": ["pay rise", "pay review", "salary review", "bonus allocation", "performance rating*", "promotion decision*"] },
+          "examples": {
+            "catches": ["Draft the salary review for the support team", "Set performance ratings from the ticket data"],
+            "ignores": ["Run the performance benchmark on the new index", "Review the pull request for the pay page"]
+          }
+        },
+        {
+          "name": "Monitoring staff",
+          "principle": "privacy",
+          "concern": "This watches what people do at work. Do they know, is it limited to what is needed for a stated purpose, and has someone responsible for data protection agreed to it?",
+          "effect": "flag",
+          "match": { "keywords": ["employee monitoring", "monitor employees", "monitor staff", "staff surveillance", "track employees", "productivity score*"] },
+          "examples": {
+            "catches": ["Monitor staff activity on their laptops and report idle time", "Work out productivity scores for each agent on the helpdesk"],
+            "ignores": ["Monitor the staging server for errors", "Track page views in analytics"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "money",
+      "title": "Money, credit and debt",
+      "rules": [
+        {
+          "name": "Credit and affordability decisions",
+          "principle": "fairness",
+          "concern": "This may decide whether someone gets credit, or on what terms. Can the decision be explained to them, and is nothing like age, postcode or nationality doing the work of a protected characteristic?",
+          "effect": "flag",
+          "match": { "keywords": ["credit decision*", "credit score*", "affordability", "decline the application", "application declined"] },
+          "examples": {
+            "catches": ["Make the credit decision for these twelve applications", "Write to say the application declined after the affordability check"],
+            "ignores": ["Decline the calendar invite for Friday", "Update the credit card form validation"]
+          }
+        },
+        {
+          "name": "Collecting debts",
+          "principle": "wellbeing",
+          "concern": "This asks someone for money they owe. Is the tone fair, is the amount right, and does it tell them where to get help if they are struggling?",
+          "effect": "flag",
+          "match": { "keywords": ["debt collection", "arrears", "overdue balance", "final demand", "default notice"] },
+          "examples": {
+            "catches": ["Send a final demand to customers more than 90 days in arrears", "Draft a default notice for account 4471"],
+            "ignores": ["Pay down the tech debt in the billing module", "Send the default welcome email"]
+          }
+        },
+        {
+          "name": "Customers who may be vulnerable",
+          "principle": "wellbeing",
+          "concern": "This involves someone who may be in a vulnerable situation. A second person should agree that the outcome and the way it is communicated are fair to them.",
+          "effect": "escalate",
+          "requiredApprovals": 2,
+          "match": { "keywords": ["vulnerable customer*", "bereave*", "financial difficulty", "financial hardship", "mental health", "terminal illness"] },
+          "examples": {
+            "catches": ["Reply to the customer who told us they were recently bereaved", "Offer a payment plan to customers in financial difficulty"],
+            "ignores": ["Fix the vulnerable dependency flagged by the scanner", "Check the health of the queue workers"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "honesty",
+      "title": "Speaking to customers and the public",
+      "rules": [
+        {
+          "name": "Not saying an AI is involved",
+          "principle": "honesty",
+          "concern": "Would the person reading this think a human wrote it, or that they are talking to one? Where the law or the organisation requires it, say that AI is involved. Article 50 of the EU AI Act is one such requirement.",
+          "effect": "flag",
+          "match": { "keywords": ["pretend to be", "posing as", "reply as me", "write as me", "ghostwrit*", "as a human"] },
+          "examples": {
+            "catches": ["Reply as me to everyone who emailed about the outage", "Answer the chat as a human so they stay engaged"],
+            "ignores": ["Reply to the review comment on the pull request", "Write the release notes for 2.4"]
+          }
+        },
+        {
+          "name": "Pressure and persuasion",
+          "principle": "autonomy",
+          "concern": "Does this push someone into a choice they might not make with time to think, or make it harder to say no or to leave?",
+          "effect": "flag",
+          "match": { "keywords": ["limited time offer", "fear of missing out", "upsell", "auto-renew*", "hard to cancel", "pre-ticked", "dark pattern*"] },
+          "examples": {
+            "catches": ["Add a limited time offer banner to the cancellation page", "Switch all plans to auto-renew without asking"],
+            "ignores": ["Renew the TLS certificate", "Add a cancel button to the upload dialog"]
+          }
+        },
+        {
+          "name": "Claims about health, money or the law",
+          "principle": "honesty",
+          "concern": "This makes a claim people may rely on about their health, money or legal position. Is it true, can it be backed up, and is it advice the organisation is allowed to give?",
+          "effect": "flag",
+          "match": { "keywords": ["guaranteed return*", "risk-free", "medical advice", "legal advice", "financial advice", "investment advice"] },
+          "examples": {
+            "catches": ["Write a landing page promising guaranteed returns of 12%", "Give the customer financial advice on their pension"],
+            "ignores": ["Return the guaranteed delivery date from the API", "Free the memory after the request"]
+          }
+        },
+        {
+          "name": "Fake reviews and testimonials",
+          "principle": "honesty",
+          "concern": "The organisation does not publish reviews or testimonials that did not come from real customers. Ask a person if you think this request is something else.",
+          "effect": "refuse",
+          "match": { "keywords": ["fake review*", "fake testimonial*", "astroturf*", "write reviews for", "post reviews as"] },
+          "examples": {
+            "catches": ["Write reviews for our app as if from five different customers", "Post reviews as happy users on the store listing"],
+            "ignores": ["Summarise the reviews customers left this month", "Review the testimonial page copy for typos"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Personal data",
+      "rules": [
+        {
+          "name": "Customer data going somewhere new",
+          "principle": "privacy",
+          "concern": "This moves personal data to a place or a purpose it was not collected for. Is there a lawful basis, would the people it is about expect it, and is only what is needed being sent?",
+          "effect": "flag",
+          "match": { "keywords": ["data broker*", "sell customer data", "share customer data", "export customer data", "upload customer list", "enrich contacts"] },
+          "examples": {
+            "catches": ["Export customer data to the new marketing agency", "Enrich contacts with data from a data broker"],
+            "ignores": ["Export the dashboard as CSV", "Seed the database with test customers"]
+          }
+        },
+        {
+          "name": "Faces, emotions and location",
+          "principle": "privacy",
+          "concern": "This identifies people from their face, infers their emotions, or tracks where they are. Inferring emotions at work or in education is prohibited under the EU AI Act except for medical or safety reasons, and the rest needs a clear lawful basis. A second person should agree it is allowed.",
+          "effect": "escalate",
+          "requiredApprovals": 2,
+          "match": { "keywords": ["facial recognition", "face recognition", "emotion recognition", "emotion detection", "location history", "track the location"] },
+          "examples": {
+            "catches": ["Run facial recognition on the entrance camera footage", "Add emotion detection to the interview recordings"],
+            "ignores": ["Add a store finder to the contact page", "Recognise the file type from its header"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "accounts",
+      "title": "Acting on someone's account",
+      "rules": [
+        {
+          "name": "Changing someone's account for them",
+          "principle": "autonomy",
+          "concern": "This changes something a person would expect to decide themselves. Did they ask for it, and will they be told it was done?",
+          "effect": "flag",
+          "match": { "keywords": ["close their account", "close the customer's account", "cancel their subscription", "downgrade their plan", "change their password"] },
+          "examples": {
+            "catches": ["Cancel their subscription since they have not logged in for a year", "Close the customer's account and refund the balance"],
+            "ignores": ["Close the stale pull requests", "Cancel the scheduled build"]
+          }
+        }
+      ]
+    }
+  ]
+}
