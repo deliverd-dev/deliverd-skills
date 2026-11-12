@@ -130,6 +130,10 @@ if (decision.approved) await refund(decision.input!); // corrections included
 ```
 
 Python is the same call, `deliverd.approve(...)`, with snake_case arguments.
+If you are building an interface with Vercel's UI SDK (`@ui-sdk/*`) that an
+agent can drive, mark consequential controls `data-agent-confirm="…"` and pass
+`deliverdAllow({ endpoint })` from `@deliverd/sdk/adapters` as `createAgent`'s
+`allow`, with `uiSdkApprovalRoute` behind that endpoint on the server.
 With `DELIVERD_MODE=development` set, both SDKs run offline: nothing is sent,
 and the decision is simulated (`DELIVERD_DEV_OUTCOME` chooses which), so you
 can build and test the flow before anyone is connected.
