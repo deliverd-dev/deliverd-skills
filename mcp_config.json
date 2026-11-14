@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "deliverd": {
+      "serverUrl": "https://deliverd.dev/api/mcp"
+    }
+  }
+}

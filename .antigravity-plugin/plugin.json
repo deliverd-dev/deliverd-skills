@@ -1,0 +1,20 @@
+{
+  "name": "deliverd",
+  "displayName": "Deliverd",
+  "version": "1.6.0",
+  "description": "Before a consequential action, the agent asks a named person or your organisation's policy through Deliverd, and acts on the answer.",
+  "author": {
+    "name": "Deliverd",
+    "url": "https://deliverd.dev"
+  },
+  "homepage": "https://deliverd.dev/docs/developers/google-antigravity",
+  "repository": "https://github.com/deliverd-dev/deliverd-skills",
+  "license": "MIT",
+  "keywords": ["deliverd", "human-in-the-loop", "approval", "review", "mcp"],
+  "logo": "assets/icon.png",
+  "suggestedPrompts": [
+    "Ask Finance to approve this refund before you issue it",
+    "Get my lead's sign-off on this migration plan, then carry on",
+    "What is still waiting for someone's approval?"
+  ]
+}
