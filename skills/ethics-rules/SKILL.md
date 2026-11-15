@@ -118,7 +118,7 @@ in the concern.
 
 1. Switch on one rule, as a flag.
 2. Leave it for a week of normal work.
-3. Read **Records → Analytics → Approval analytics**. Its ethics concerns panel
+3. Read **Analytics → Approvals**. Its ethics concerns panel
    shows how many requests put a concern to the approver, what share of all
    requests that is, how many of those were approved anyway (each with a
    reason), and the counts by principle.
