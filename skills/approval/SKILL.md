@@ -136,6 +136,10 @@ agent can drive, mark consequential controls `data-agent-confirm="…"` and pass
 `allow`, with `uiSdkApprovalRoute` behind that endpoint on the server. If the
 page also calls `registerTools` for WebMCP, pass `deliverdWebMcpAllow({ endpoint })`
 as its `allow`, never `() => true` on a bridge with no `allow` of its own.
+If you are building on OpenRouter's Agent SDK (`@openrouter/agent`), mark the
+consequential tools `requireApproval: true` and pass
+`deliverdPermissionRequest({ deliverd })` from `@deliverd/sdk/adapters` in
+`hooks.PermissionRequest`, so a person decides each call and the run carries on.
 With `DELIVERD_MODE=development` set, both SDKs run offline: nothing is sent,
 and the decision is simulated (`DELIVERD_DEV_OUTCOME` chooses which), so you
 can build and test the flow before anyone is connected.
