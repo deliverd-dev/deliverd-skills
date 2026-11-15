@@ -140,6 +140,11 @@ If you are building on OpenRouter's Agent SDK (`@openrouter/agent`), mark the
 consequential tools `requireApproval: true` and pass
 `deliverdPermissionRequest({ deliverd })` from `@deliverd/sdk/adapters` in
 `hooks.PermissionRequest`, so a person decides each call and the run carries on.
+If you are building on Perplexity's Agent API, set `require_approval` on each
+MCP server or connector that can change something (Perplexity runs them without
+asking otherwise) and create the response with `runPerplexityWithDeliverd` from
+`@deliverd/sdk/adapters`, or `run_with_deliverd_approvals` from
+`deliverd.adapters.perplexity` in Python, so a person answers each approval request.
 With `DELIVERD_MODE=development` set, both SDKs run offline: nothing is sent,
 and the decision is simulated (`DELIVERD_DEV_OUTCOME` chooses which), so you
 can build and test the flow before anyone is connected.
