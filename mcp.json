@@ -3,7 +3,7 @@
   "mcpServers": {
     "deliverd": {
       "type": "streamable-http",
-      "url": "https://deliverd.dev/api/mcp"
+      "url": "https://deliverd.dev/api/mcp/v2"
     }
   }
 }

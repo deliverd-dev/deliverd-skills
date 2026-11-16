@@ -1,7 +1,7 @@
 {
   "name": "deliverd",
   "displayName": "Deliverd",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Before a consequential action, the agent asks a named person or your organisation's policy through Deliverd, and acts on the answer.",
   "author": {
     "name": "Deliverd",

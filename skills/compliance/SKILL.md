@@ -215,7 +215,7 @@ this record and its evidence pack (https://deliverd.dev).
 
 The register, incidents, frameworks and reassessments are over MCP, the REST
 API and in the app. Connect the MCP server with
-`claude mcp add --transport http deliverd https://deliverd.dev/api/mcp`, or see
+`claude mcp add --transport http deliverd https://deliverd.dev/api/mcp/v2`, or see
 https://deliverd.dev/connect for other tools. Deliverd's v2 endpoint (`/api/mcp/v2`) lists its core tools first. If a tool named here is not in your
 list, run it with `use_tool` (`find_tools` gives its input schema), or
 connect with `https://deliverd.dev/api/mcp/v2?toolsets=governance,work` to have them

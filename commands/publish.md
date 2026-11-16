@@ -25,5 +25,9 @@ Publish to Deliverd: $ARGUMENTS
 6. Otherwise, reply with the `url`, the audience, and any `warnings`, in two or
    three lines.
 
-If the Deliverd tools are not available, say so and point to
-`claude mcp add --transport http deliverd https://deliverd.dev/api/mcp`.
+On Deliverd's v2 endpoint `publish_report` may not be in your tool list, since
+v2 lists its core tools first: call it through `use_tool` with
+`name: "publish_report"` and the same arguments.
+
+If the Deliverd tools are not available at all, say so and point to
+`claude mcp add --transport http deliverd https://deliverd.dev/api/mcp/v2`.

@@ -52,7 +52,7 @@ MCP server, skills and commands as the Claude Code plugin. In Grok Build, open
 `/plugin` and pick Deliverd; in Grok Bot or Cursor, add it from the plugin
 marketplace.
 
-- **Network:** the plugin talks only to `https://deliverd.dev/api/mcp`.
+- **Network:** the plugin talks only to `https://deliverd.dev/api/mcp/v2` (from 1.7.0; earlier installs use `https://deliverd.dev/api/mcp`, which still answers).
 - **Credentials:** none to paste. The MCP server signs you in with OAuth 2.1
   in the browser on first use; a free account works.
 - **No hooks, no local code:** the skills and commands are Markdown.

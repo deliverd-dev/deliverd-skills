@@ -1,6 +1,6 @@
 {
   "name": "deliverd",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Give any AI agent a way to ask a person — for approval, a decision, an answer or a review.",
   "author": {
     "name": "Deliverd",
@@ -13,7 +13,7 @@
   "mcpServers": {
     "deliverd": {
       "type": "http",
-      "url": "https://deliverd.dev/api/mcp"
+      "url": "https://deliverd.dev/api/mcp/v2"
     }
   }
 }

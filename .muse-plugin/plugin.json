@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "name": "deliverd",
   "displayName": "Deliverd",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Human-in-the-loop for Muse Code: before a consequential action, the agent asks a named person, or your organisation's policy, through Deliverd and acts on the answer. Bundles the Deliverd MCP server (OAuth sign-in, no key to paste) and the approval, tasks, ethics, ethics-rules, artifact, compliance, screen, prompts, policy and checkpoint skills.",
   "logo": "assets/icon.png",
   "author": { "name": "Deliverd", "url": "https://deliverd.dev" },
@@ -21,7 +21,7 @@
       { "id": "checkpoint", "path": "skills/checkpoint/SKILL.md", "enabledDefault": true }
     ],
     "mcpServers": [
-      { "id": "deliverd", "transport": "http", "url": "https://deliverd.dev/api/mcp" }
+      { "id": "deliverd", "transport": "http", "url": "https://deliverd.dev/api/mcp/v2" }
     ]
   }
 }
