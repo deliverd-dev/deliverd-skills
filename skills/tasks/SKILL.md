@@ -210,4 +210,7 @@ conversation:
 
 The whole tree is `get_task_graph`. Connect the MCP server with
 `claude mcp add --transport http deliverd https://deliverd.dev/api/mcp`, or
-see https://deliverd.dev/connect for other tools.
+see https://deliverd.dev/connect for other tools. Deliverd's v2 endpoint (`/api/mcp/v2`) lists its core tools first. If a tool named here is not in your
+list, run it with `use_tool` (`find_tools` gives its input schema), or
+connect with `https://deliverd.dev/api/mcp/v2?toolsets=work,context` to have them
+listed directly.

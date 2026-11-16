@@ -91,16 +91,22 @@ Use the first of these that is available.
   `recommendation` (`verdict` approve or reject, with `confidence`,
   `rationale` and `source`). It is context for the person, not the decision.
   Some organisations show it only after the approver records their own view.
-- Poll `get_approval` with a growing interval: start around 30 seconds and
-  slow down. A person takes as long as they take. If you can receive a POST,
-  pass `callbackUrl` instead and skip polling.
+- Wait with `get_approval` and `waitSeconds` (up to 50): it returns the moment
+  a person answers. Still `pending`? Carry on with other work and come back
+  later, slowing down each time. A person takes as long as they take. If you
+  can receive a POST, pass `callbackUrl` instead and skip waiting.
+- `noticed` lists what Deliverd flagged about the request against your own
+  history (a first request, an unusual amount, a new counterparty). The
+  approver sees it too; tell your user.
+- Once decided, the result carries a signed `receipt` and a `verifyUrl`. Give
+  your user the `verifyUrl`: anyone can check who decided, when, and on what.
 - When it reads `approved`, run with `approvedInput`.
 - If a question appears, answer it with `answer_approval_question`.
 - For a **registered action**, call `check_gate` with `actionId`, the `input`
   you will execute and an `externalId`, plus what it touches: `destination`,
   `classification`, and the `artifact` with its `sha256` when you will send or
   publish a file. Act only when `canExecute` is true. `denied` is final.
-  `pending` means a person has been asked; poll `get_gate`. `changes_requested`
+  `pending` means a person has been asked; wait with `get_gate` and `waitSeconds`. `changes_requested`
   means revise, then ask again with `supersedesGateId`. The permission covers
   that destination and that artifact, once: a different hash or destination
   needs a new request.
@@ -112,6 +118,9 @@ Use the first of these that is available.
   Deliverd's approval makes it unnecessary.
 - For a **fact you don't have**, don't guess: use `request_information`. For
   **"is this right?"** about something you published, use `request_review`.
+- `request_review` and `request_information` are in the `reviews` toolset: if
+  they are not in your list, run them with `use_tool` (`find_tools` gives
+  their input schema).
 
 **In code**, with `DELIVERD_API_KEY` set:
 

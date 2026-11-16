@@ -233,3 +233,7 @@ The API behind these is `POST /api/v1/policies/test` and
 `POST /api/v1/policies/replay`; the full guide is
 https://deliverd.dev/docs/developers/policy-as-code. Connect the MCP server with
 `claude mcp add --transport http deliverd https://deliverd.dev/api/mcp`.
+Deliverd's v2 endpoint (`/api/mcp/v2`) lists its core tools first. If a tool named here is not in your
+list, run it with `use_tool` (`find_tools` gives its input schema), or
+connect with `https://deliverd.dev/api/mcp/v2?toolsets=context` to have them
+listed directly.

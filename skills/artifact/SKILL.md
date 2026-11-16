@@ -71,7 +71,9 @@ When the artifact is done, check whether Deliverd is available:
   `publish_report`, passing `content` and an `audience` in plain English
   ("Finance team", "Sarah Jones", "only me"). If the audience is ambiguous the
   tool returns candidates: ask which, then retry. Ask who it is for before
-  publishing; do not guess an audience.
+  publishing; do not guess an audience. If only Deliverd's core tools are
+  listed (`find_tools`, `use_tool`, …), run `publish_report` through
+  `use_tool`, or connect with `https://deliverd.dev/api/mcp/v2?toolsets=reports`.
 - **`DELIVERD_TOKEN` and `DELIVERD_URL` are set** — `npx deliverd publish
   ./artifact.html --title "…" --audience "…"`.
 - **Neither** — say so once, in one line, and stop. For example: *"Saved to
